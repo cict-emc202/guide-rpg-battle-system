@@ -160,33 +160,34 @@
             </p>
 
             <div class="node-tree">
-                <div class="node root">📦 BattleScene <span class="node-type">(Node2D)</span></div>
-                <div class="node" style="margin-left:2rem">🖼️ Background <span class="node-type">(Sprite2D)</span>
+                <div class="node root"><i class="node-icon">📦</i> BattleScene <span class="node-type">Node2D</span>
                 </div>
-                <div class="node" style="margin-left:2rem">🧑 Hero <span class="node-type">(AnimatedSprite2D)</span>
-                    <div class="node" style="margin-left:2rem">💚 HeroHealthBar <span
-                            class="node-type">(TextureProgressBar)</span></div>
-                    <div class="node" style="margin-left:2rem">🏷️ HeroLabel <span class="node-type">(Label)</span>
-                    </div>
-                </div>
-                <div class="node" style="margin-left:2rem">👾 Monster <span class="node-type">(AnimatedSprite2D)</span>
-                    <div class="node" style="margin-left:2rem">❤️ MonsterHealthBar <span
-                            class="node-type">(TextureProgressBar)</span></div>
-                    <div class="node" style="margin-left:2rem">🏷️ MonsterLabel <span class="node-type">(Label)</span>
-                    </div>
-                </div>
-                <div class="node" style="margin-left:2rem">🎨 UI <span class="node-type">(CanvasLayer)</span>
-                    <div class="node" style="margin-left:2rem">📋 LogLabel <span class="node-type">(Label)</span></div>
-                    <div class="node" style="margin-left:2rem">📦 ButtonContainer <span
-                            class="node-type">(HBoxContainer)</span>
-                        <div class="node" style="margin-left:2rem">⚔️ AttackButton <span
-                                class="node-type">(Button)</span></div>
-                        <div class="node" style="margin-left:2rem">💊 HealButton <span class="node-type">(Button)</span>
-                        </div>
-                        <div class="node" style="margin-left:2rem">🛡️ DefendButton <span
-                                class="node-type">(Button)</span></div>
-                    </div>
-                </div>
+                <div class="node" style="margin-left:2rem"><i class="node-icon">🖼️</i> Background <span
+                        class="node-type">Sprite2D</span></div>
+                <div class="node" style="margin-left:2rem"><i class="node-icon">🧑</i> Hero <span
+                        class="node-type">AnimatedSprite2D</span></div>
+                <div class="node" style="margin-left:4rem"><i class="node-icon">💚</i> HeroHealthBar <span
+                        class="node-type">TextureProgressBar</span></div>
+                <div class="node" style="margin-left:4rem"><i class="node-icon">🏷️</i> HeroLabel <span
+                        class="node-type">Label</span></div>
+                <div class="node" style="margin-left:2rem"><i class="node-icon">👾</i> Monster <span
+                        class="node-type">AnimatedSprite2D</span></div>
+                <div class="node" style="margin-left:4rem"><i class="node-icon">❤️</i> MonsterHealthBar <span
+                        class="node-type">TextureProgressBar</span></div>
+                <div class="node" style="margin-left:4rem"><i class="node-icon">🏷️</i> MonsterLabel <span
+                        class="node-type">Label</span></div>
+                <div class="node" style="margin-left:2rem"><i class="node-icon">🎨</i> UI <span
+                        class="node-type">CanvasLayer</span></div>
+                <div class="node" style="margin-left:4rem"><i class="node-icon">📋</i> LogLabel <span
+                        class="node-type">Label</span></div>
+                <div class="node" style="margin-left:4rem"><i class="node-icon">📦</i> ButtonContainer <span
+                        class="node-type">HBoxContainer</span></div>
+                <div class="node" style="margin-left:6rem"><i class="node-icon">⚔️</i> AttackButton <span
+                        class="node-type">Button</span></div>
+                <div class="node" style="margin-left:6rem"><i class="node-icon">💊</i> HealButton <span
+                        class="node-type">Button</span></div>
+                <div class="node" style="margin-left:6rem"><i class="node-icon">🛡️</i> DefendButton <span
+                        class="node-type">Button</span></div>
             </div>
 
             <div class="info-box warning">
@@ -374,7 +375,12 @@
             <h3>4.4 — Playing Animations in Code</h3>
             <p>Here's how to trigger animations from your script:</p>
 
-            <pre><code><span class="kw">func</span> <span class="fn">play_hero_attack</span>():
+            <div class="code-container">
+                <div class="code-header">
+                    <span>animation_logic.gd</span>
+                    <button class="copy-btn" onclick="copySnippet(this)">Copy Code</button>
+                </div>
+                <pre><code><span class="kw">func</span> <span class="fn">play_hero_attack</span>():
     <span class="comment"># Switch to the attack animation</span>
     hero.play(<span class="str">"attack"</span>)
     
@@ -388,6 +394,7 @@
     hero.play(<span class="str">"hit"</span>)
     <span class="kw">await</span> hero.animation_finished
     hero.play(<span class="str">"idle"</span>)</code></pre>
+            </div>
 
             <div class="info-box tip">
                 <strong>💡 Tip:</strong> The <code>animation_finished</code> signal is emitted when a non-looping
@@ -400,7 +407,12 @@
                 can use the static <code>monster/giant.png</code> and create a simple "shake" effect using a
                 <strong>Tween</strong> instead:
             </p>
-            <pre><code><span class="kw">func</span> <span class="fn">shake_monster</span>():
+            <div class="code-container">
+                <div class="code-header">
+                    <span>juice_effects.gd</span>
+                    <button class="copy-btn" onclick="copySnippet(this)">Copy Code</button>
+                </div>
+                <pre><code><span class="kw">func</span> <span class="fn">shake_monster</span>():
     <span class="kw">var</span> original_pos = monster.position
     <span class="kw">var</span> tween = create_tween()
     tween.tween_property(monster, <span class="str">"position"</span>, 
@@ -410,6 +422,7 @@
     tween.tween_property(monster, <span class="str">"position"</span>, 
         original_pos, <span class="num">0.05</span>)
     <span class="kw">await</span> tween.finished</code></pre>
+            </div>
         </section>
 
         <!-- CONNECTING SIGNALS -->
@@ -464,7 +477,12 @@
                 <p>Add these lines inside your <code>_ready()</code> function to connect each button's
                     <code>pressed</code> signal to the corresponding handler function:
                 </p>
-                <pre><code><span class="kw">func</span> <span class="fn">_ready</span>():
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>signals_setup.gd</span>
+                        <button class="copy-btn" onclick="copySnippet(this)">Copy Code</button>
+                    </div>
+                    <pre><code><span class="kw">func</span> <span class="fn">_ready</span>():
     <span class="comment"># Connect button signals to their handler functions</span>
     attack_btn.pressed.connect(_on_attack_button_pressed)
     heal_btn.pressed.connect(_on_heal_button_pressed)
@@ -474,6 +492,7 @@
     hero.play(<span class="str">"idle"</span>)
     update_ui()
     log_label.text = <span class="str">"A wild Giant appears!"</span></code></pre>
+                </div>
                 <div class="info-box info">
                     <strong>📖 How does <code>.connect()</code> work?</strong> Every signal in Godot is an object.
                     Calling <code>signal_name.connect(my_function)</code> tells Godot: "When this signal fires, call
@@ -498,11 +517,12 @@
 
             <h3>6.1 — Node References &amp; Variables</h3>
             <p>First, we set up references to our scene nodes and declare our stats:</p>
-            <pre><code><span class="kw">extends</span> Node2D
-
-<span class="comment"># ─── Node References ───</span>
-<span class="comment"># @onready waits until all nodes are loaded before assigning</span>
-<span class="kw">@onready var</span> hero = $Hero
+            <div class="code-container">
+                <div class="code-header">
+                    <span>battle_scene.gd (Setup)</span>
+                    <button class="copy-btn" onclick="copySnippet(this)">Copy Code</button>
+                </div>
+                <pre><code><span class="kw">@onready var</span> hero = $Hero
 <span class="kw">@onready var</span> monster = $Monster
 <span class="kw">@onready var</span> hero_health_bar = $Hero/HeroHealthBar
 <span class="kw">@onready var</span> monster_health_bar = $Monster/MonsterHealthBar
@@ -511,14 +531,13 @@
 <span class="kw">@onready var</span> heal_btn = $UI/ButtonContainer/HealButton
 <span class="kw">@onready var</span> defend_btn = $UI/ButtonContainer/DefendButton
 
-<span class="comment"># ─── Game Stats ───</span>
 <span class="kw">var</span> hero_hp : <span class="type">int</span> = <span class="num">100</span>
 <span class="kw">var</span> hero_max_hp : <span class="type">int</span> = <span class="num">100</span>
 <span class="kw">var</span> monster_hp : <span class="type">int</span> = <span class="num">100</span>
-<span class="kw">var</span> monster_max_hp : <span class="type">int</span> = <span class="num">100</span>
 <span class="kw">var</span> is_hero_turn : <span class="type">bool</span> = <span class="num">true</span>
 <span class="kw">var</span> is_defending : <span class="type">bool</span> = <span class="num">false</span>
 <span class="kw">var</span> battle_over : <span class="type">bool</span> = <span class="num">false</span></code></pre>
+            </div>
 
             <div class="info-box info">
                 <strong>📖 About <code>@onready</code>:</strong> The <code>@onready</code> annotation assigns the
@@ -527,62 +546,73 @@
             </div>
 
             <h3>6.2 — Initialization</h3>
-            <pre><code><span class="kw">func</span> <span class="fn">_ready</span>():
-    <span class="comment"># Start both characters in idle animation</span>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>battle_scene.gd (Lifecycle)</span>
+                    <button class="copy-btn" onclick="copySnippet(this)">Copy Code</button>
+                </div>
+                <pre><code><span class="kw">func</span> <span class="fn">_ready</span>():
     hero.play(<span class="str">"idle"</span>)
-    monster.play(<span class="str">"idle"</span>)  <span class="comment"># or use static sprite if no sheet</span>
-    
+    monster.play(<span class="str">"idle"</span>)
     update_ui()
-    log_label.text = <span class="str">"A wild Giant appears! Choose your action."</span></code></pre>
+    log_label.text = <span class="str">"A wild Giant appears! Choose your action."</span>
 
-            <h3>6.3 — UI Update Function</h3>
-            <pre><code><span class="kw">func</span> <span class="fn">update_ui</span>():
-    <span class="comment"># Sync health bar values with current HP</span>
+<span class="kw">func</span> <span class="fn">update_ui</span>():
     hero_health_bar.value = hero_hp
-    monster_health_bar.value = monster_hp</code></pre>
+    monster_health_bar.value = monster_hp
 
-            <h3>6.4 — Helper: Toggle Buttons</h3>
-            <pre><code><span class="kw">func</span> <span class="fn">set_buttons_disabled</span>(disabled: <span class="type">bool</span>):
-    <span class="comment"># Prevent player from clicking during monster turn / animations</span>
+<span class="kw">func</span> <span class="fn">set_buttons_disabled</span>(disabled: <span class="type">bool</span>):
     attack_btn.disabled = disabled
     heal_btn.disabled = disabled
     defend_btn.disabled = disabled</code></pre>
+            </div>
 
             <h3>6.5 — Attack Action</h3>
-            <pre><code><span class="kw">func</span> <span class="fn">_on_attack_button_pressed</span>():
+            <div class="code-container">
+                <div class="code-header">
+                    <span>battle_scene.gd (Combat)</span>
+                    <button class="copy-btn" onclick="copySnippet(this)">Copy Code</button>
+                </div>
+                <pre><code><span class="kw">func</span> <span class="fn">_on_attack_button_pressed</span>():
     <span class="kw">if not</span> is_hero_turn <span class="kw">or</span> battle_over: <span class="kw">return</span>
     
     set_buttons_disabled(<span class="num">true</span>)
     is_defending = <span class="num">false</span>
     
-    <span class="comment"># Play attack animation then wait for it to finish</span>
+    <span class="comment"># 1. Play attack animation</span>
     hero.play(<span class="str">"attack"</span>)
     <span class="kw">await</span> hero.animation_finished
     hero.play(<span class="str">"idle"</span>)
     
-    <span class="comment"># Calculate random damage between 10 and 25</span>
-    <span class="kw">var</span> damage = randi_range(<span class="num">10</span>, <span class="num">25</span>)
-    monster_hp -= damage
-    monster_hp = max(<span class="num">0</span>, monster_hp)  <span class="comment"># Don't go below zero</span>
+    <span class="comment"># 2. Damage logic + Shake effect!</span>
+    <span class="kw">var</span> damage = randi_range(<span class="num">15</span>, <span class="num">25</span>)
+    monster_hp = max(<span class="num">0</span>, monster_hp - damage)
     
     log_label.text = <span class="str">"Hero deals "</span> + str(damage) + <span class="str">" damage!"</span>
     update_ui()
     
-    <span class="comment"># Check for victory before passing the turn</span>
+    <span class="comment"># Trigger the shake effect we wrote earlier</span>
+    <span class="kw">await</span> shake_monster()
+    
     <span class="kw">if</span> check_battle_end(): <span class="kw">return</span>
     
     is_hero_turn = <span class="num">false</span>
     <span class="kw">await</span> get_tree().create_timer(<span class="num">1.0</span>).timeout
     monster_turn()</code></pre>
+            </div>
 
             <h3>6.6 — Heal Action</h3>
-            <pre><code><span class="kw">func</span> <span class="fn">_on_heal_button_pressed</span>():
+            <div class="code-container">
+                <div class="code-header">
+                    <span>battle_scene.gd (Heal)</span>
+                    <button class="copy-btn" onclick="copySnippet(this)">Copy Code</button>
+                </div>
+                <pre><code><span class="kw">func</span> <span class="fn">_on_heal_button_pressed</span>():
     <span class="kw">if not</span> is_hero_turn <span class="kw">or</span> battle_over: <span class="kw">return</span>
     
     set_buttons_disabled(<span class="num">true</span>)
     is_defending = <span class="num">false</span>
     
-    <span class="comment"># Heal 25 HP, but never exceed max HP</span>
     <span class="kw">var</span> heal_amount = <span class="num">25</span>
     hero_hp = min(hero_max_hp, hero_hp + heal_amount)
     
@@ -592,29 +622,31 @@
     is_hero_turn = <span class="num">false</span>
     <span class="kw">await</span> get_tree().create_timer(<span class="num">1.0</span>).timeout
     monster_turn()</code></pre>
+            </div>
 
             <h3>6.7 — Monster's Turn</h3>
-            <pre><code><span class="kw">func</span> <span class="fn">monster_turn</span>():
+            <div class="code-container">
+                <div class="code-header">
+                    <span>battle_scene.gd (Enemy AI)</span>
+                    <button class="copy-btn" onclick="copySnippet(this)">Copy Code</button>
+                </div>
+                <pre><code><span class="kw">func</span> <span class="fn">monster_turn</span>():
     <span class="kw">if</span> battle_over: <span class="kw">return</span>
     
-    <span class="comment"># Monster attacks with random damage</span>
     <span class="kw">var</span> base_damage = randi_range(<span class="num">8</span>, <span class="num">18</span>)
-    
-    <span class="comment"># If hero is defending, damage is halved</span>
     <span class="kw">var</span> actual_damage = base_damage
+    
     <span class="kw">if</span> is_defending:
         actual_damage = base_damage / <span class="num">2</span>
         log_label.text = <span class="str">"Hero blocks! Takes only "</span> + str(actual_damage) + <span class="str">" damage."</span>
     <span class="kw">else</span>:
         log_label.text = <span class="str">"Monster hits Hero for "</span> + str(actual_damage) + <span class="str">"!"</span>
     
-    <span class="comment"># Play hit animation on hero</span>
     hero.play(<span class="str">"hit"</span>)
     <span class="kw">await</span> hero.animation_finished
     hero.play(<span class="str">"idle"</span>)
     
-    hero_hp -= actual_damage
-    hero_hp = max(<span class="num">0</span>, hero_hp)
+    hero_hp = max(<span class="num">0</span>, hero_hp - actual_damage)
     update_ui()
     
     <span class="kw">if</span> check_battle_end(): <span class="kw">return</span>
@@ -622,6 +654,7 @@
     is_hero_turn = <span class="num">true</span>
     is_defending = <span class="num">false</span>
     set_buttons_disabled(<span class="num">false</span>)</code></pre>
+            </div>
         </section>
 
         <!-- DEFEND ACTION -->
@@ -629,22 +662,26 @@
             <h2><span class="step-badge">7</span> Bonus: Defend Action</h2>
             <p>The Defend button adds tactical depth. When the hero defends, incoming damage is <strong>halved</strong>
                 on the next monster turn.</p>
-            <pre><code><span class="kw">func</span> <span class="fn">_on_defend_button_pressed</span>():
+            <div class="code-container">
+                <div class="code-header">
+                    <span>battle_scene.gd (Defend)</span>
+                    <button class="copy-btn" onclick="copySnippet(this)">Copy Code</button>
+                </div>
+                <pre><code><span class="kw">func</span> <span class="fn">_on_defend_button_pressed</span>():
     <span class="kw">if not</span> is_hero_turn <span class="kw">or</span> battle_over: <span class="kw">return</span>
     
     set_buttons_disabled(<span class="num">true</span>)
     is_defending = <span class="num">true</span>
-    
     log_label.text = <span class="str">"Hero braces for impact!"</span>
     
     is_hero_turn = <span class="num">false</span>
     <span class="kw">await</span> get_tree().create_timer(<span class="num">1.0</span>).timeout
     monster_turn()</code></pre>
+            </div>
 
             <div class="info-box tip">
                 <strong>💡 Design Insight:</strong> The defend mechanic creates meaningful choices. Should the player
-                heal (recover HP) or defend (reduce incoming damage)? This risk-vs-reward decision makes the battle more
-                strategic and fun.
+                heal (recover HP) or defend (reduce incoming damage)?
             </div>
         </section>
 
@@ -652,22 +689,26 @@
         <section id="win-lose">
             <h2><span class="step-badge">8</span> Victory &amp; Defeat</h2>
             <p>Every battle needs an ending! Let's detect when either the hero or monster runs out of HP:</p>
-            <pre><code><span class="kw">func</span> <span class="fn">check_battle_end</span>() -> <span class="type">bool</span>:
+            <div class="code-container">
+                <div class="code-header">
+                    <span>battle_scene.gd (Conclusion)</span>
+                    <button class="copy-btn" onclick="copySnippet(this)">Copy Code</button>
+                </div>
+                <pre><code><span class="kw">func</span> <span class="fn">check_battle_end</span>() -> <span class="type">bool</span>:
     <span class="kw">if</span> monster_hp <= <span class="num">0</span>:
         log_label.text = <span class="str">"🎉 Victory! The Monster is defeated!"</span>
         battle_over = <span class="num">true</span>
         set_buttons_disabled(<span class="num">true</span>)
-        <span class="comment"># Optional: play a victory animation or effect</span>
         <span class="kw">return true</span>
     
     <span class="kw">if</span> hero_hp <= <span class="num">0</span>:
         log_label.text = <span class="str">"💀 Defeat... The Hero has fallen."</span>
         battle_over = <span class="num">true</span>
         set_buttons_disabled(<span class="num">true</span>)
-        <span class="comment"># Optional: play a defeat animation</span>
         <span class="kw">return true</span>
     
     <span class="kw">return false</span></code></pre>
+            </div>
 
             <div class="info-box info">
                 <strong>📖 Why return a <code>bool</code>?</strong> By returning <code>true</code> when the battle ends,
@@ -1045,6 +1086,22 @@
     </footer>
 
     <script>
+        // Copy Code Logic
+        function copySnippet(button) {
+            const pre = button.parentElement.nextElementSibling;
+            const code = pre.innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = button.innerText;
+                button.innerText = "Copied!";
+                button.style.background = "#4caf50";
+                setTimeout(() => {
+                    button.innerText = originalText;
+                    button.style.background = "";
+                }, 2000);
+            });
+        }
+        window.copySnippet = copySnippet;
+
         // Tab switching for signals section
         function switchTab(button, tabId) {
             document.querySelectorAll('.method-tab').forEach(t => t.classList.remove('active'));
