@@ -40,6 +40,7 @@
         <a href="#glossary">GDScript Glossary</a>
         <a href="#rubric">Rubric (50 pts)</a>
         <a href="#quiz">Mini Quiz</a>
+        <a href="#conclusion">What's Next?</a>
     </nav>
 
     <header>
@@ -219,8 +220,10 @@
                 <li>Save the scene as <code>battle_scene.tscn</code>.</li>
             </ol>
 
-            <video src="/v2.mp4" class="video" controls></video>
-            <p class="caption">Setting up the scene.</p>
+            <div class="video-wrapper">
+                <video src="/v2.mp4" class="video" controls></video>
+                <p class="caption">Setting up the scene.</p>
+            </div>
 
             <h3>3.2 — Add the Background</h3>
             <ol>
@@ -230,6 +233,11 @@
                 <li>Set <em>Offset → Centered</em> to <strong>Off</strong> so the image starts from the top-left corner.
                 </li>
             </ol>
+
+            <div class="video-wrapper">
+                <video src="/v3.mp4" class="video" controls></video>
+                <p class="caption">Adding the background.</p>
+            </div>
 
             <h3>3.3 — Add the Hero &amp; Monster</h3>
             <p>We use <strong>AnimatedSprite2D</strong> instead of plain Sprite2D so we can play idle, attack, and hit
@@ -502,6 +510,7 @@
 
     <span class="comment"># Initialize the battle</span>
     hero.play(<span class="str">"idle"</span>)
+    monster.play(<span class="str">"idle"</span>)
     update_ui()
     log_label.text = <span class="str">"A wild Giant appears!"</span></code></pre>
                 </div>
@@ -662,7 +671,7 @@
                 <code>BattleScene</code>. Let's build it piece by piece.
             </p>
 
-            <h3>6.1 — Node References &amp; Variables</h3>
+            <h3>7.1 — Node References &amp; Variables</h3>
             <p>First, we set up references to our scene nodes and declare our stats:</p>
             <div class="code-container">
                 <div class="code-header">
@@ -692,7 +701,7 @@
                 null error. Always use <code>@onready</code> for node references.
             </div>
 
-            <h3>6.2 — Initialization</h3>
+            <h3>7.2 — Initialization</h3>
             <div class="code-container">
                 <div class="code-header">
                     <span>battle_scene.gd (Lifecycle)</span>
@@ -714,7 +723,7 @@
     defend_btn.disabled = disabled</code></pre>
             </div>
 
-            <h3>6.5 — Attack Action</h3>
+            <h3>7.3 — Attack Action</h3>
             <div class="code-container">
                 <div class="code-header">
                     <span>battle_scene.gd (Combat)</span>
@@ -748,7 +757,7 @@
     monster_turn()</code></pre>
             </div>
 
-            <h3>6.6 — Heal Action</h3>
+            <h3>7.4 — Heal Action</h3>
             <div class="code-container">
                 <div class="code-header">
                     <span>battle_scene.gd (Heal)</span>
@@ -771,7 +780,7 @@
     monster_turn()</code></pre>
             </div>
 
-            <h3>6.7 — Monster's Turn</h3>
+            <h3>7.5 — Monster's Turn</h3>
             <div class="code-container">
                 <div class="code-header">
                     <span>battle_scene.gd (Enemy AI)</span>
@@ -887,7 +896,7 @@
                     <div class="difficulty">⭐⭐ Medium</div>
                     <h4>MP &amp; Special Attack</h4>
                     <p>Add a Mana Points (MP) system. The hero starts with 50 MP. A special attack costs 20 MP but deals
-                        30–50 damage. Add a blue progress bar using <code>HUD/bar/purple.png</code>.</p>
+                        30–50 damage. Add a purple progress bar using <code>HUD/bar/purple.png</code>.</p>
                 </div>
                 <div class="challenge-card medium">
                     <div class="difficulty">⭐⭐ Medium</div>
