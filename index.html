@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Guide: Simple RPG Battle System using Godot</title>
+    <meta name="description"
+        content="Learn how to create a turn-based RPG battle system in Godot 4.x with animated sprites, health bars, and interactive combat.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <!-- Dark Mode Toggle -->
+    <button class="theme-toggle" id="themeToggle" title="Toggle dark mode">🌙</button>
+
+    <!-- Floating TOC Toggle -->
+    <button class="toc-toggle" id="tocToggle" title="Table of Contents">☰</button>
+
+    <!-- Side Navigation -->
+    <nav class="side-nav" id="sideNav">
+        <div class="side-nav-header">📖 Contents</div>
+        <a href="#introduction">Introduction</a>
+        <a href="#prerequisites">Prerequisites</a>
+        <a href="#assets">Asset Preparation</a>
+        <a href="#node-tree">Understanding the Node Tree</a>
+        <a href="#scene-setup">Scene Setup</a>
+        <a href="#animated-sprites">Animated Sprites</a>
+        <a href="#signals">Connecting Signals</a>
+        <a href="#scripting">Battle Script</a>
+        <a href="#defend">Bonus: Defend Action</a>
+        <a href="#win-lose">Victory &amp; Defeat</a>
+        <a href="#challenges">Challenge Exercises</a>
+        <a href="#glossary">GDScript Glossary</a>
+        <a href="#rubric">Rubric (50 pts)</a>
+        <a href="#quiz">Mini Quiz</a>
+    </nav>
+
+    <header>
+        <div class="header-content">
+            <span class="header-badge">BSEMC CLASS GUIDE</span>
+            <h1>RPG Battle System</h1>
+            <p class="header-sub">Build a complete turn-based combat scene with animated sprites, health bars, and
+                interactive commands</p>
+            <div class="header-meta">
+                <p><strong>EMC 202</strong> — Introduction to Game Design and Development</p>
+                <p>Instructor: <strong>Mark Joseph J. Solidarios</strong></p>
+                <p>West Visayas State University · College of Information and Communications Technology</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- INTRODUCTION -->
+        <section id="introduction">
+            <h2>Introduction</h2>
+            <p>In this guide, we will build a <strong>turn-based RPG battle system</strong> from scratch in Godot
+                4.x. You'll learn how to set up a battle scene, integrate animated sprite sheets, manage health bars,
+                wire up UI signals, and implement attack/heal/defend mechanics — all explained step by step for
+                beginners.</p>
+            <div class="mockup-ref">
+                <p><strong>What we're building:</strong></p>
+                <img src="rpg-battle-system/mockup2.png" alt="RPG Battle Mockup" loading="lazy">
+                <p class="caption">Our goal: a battle scene with animated characters, health bars, and command buttons.
+                </p>
+            </div>
+        </section>
+
+        <!-- PREREQUISITES -->
+        <section id="prerequisites">
+            <h2><span class="step-badge">0</span> Prerequisites</h2>
+            <div class="info-box info">
+                <strong>🎮 Before you begin, make sure you have:</strong>
+                <ul>
+                    <li><strong>Godot 4.x</strong> installed — <a href="https://godotengine.org/download"
+                            target="_blank">download here</a></li>
+                    <li>Basic understanding of the Godot editor (creating scenes, adding nodes)</li>
+                    <li>Familiarity with GDScript syntax (variables, functions, <code>if</code> statements)</li>
+                    <li>The RPG asset pack I gave to our class extracted into your project's <code>res://</code> folder
+                    </li>
+                </ul>
+            </div>
+            <div class="info-box tip">
+                <strong>💡 New to Godot?</strong> Check out the <a
+                    href="https://docs.godotengine.org/en/stable/getting_started/introduction/index.html"
+                    target="_blank">official Getting Started guide</a> first. This tutorial assumes you can navigate the
+                editor and create basic scenes.
+            </div>
+        </section>
+
+        <!-- ASSET PREPARATION -->
+        <section id="assets">
+            <h2><span class="step-badge">1</span> Asset Preparation</h2>
+            <p>Our asset pack includes characters, monsters, backgrounds, HUD elements, effects, and sounds. Here are
+                the key assets we'll use:</p>
+
+            <div class="asset-grid">
+                <div class="asset-card">
+                    <img src="rpg-battle-system/backgrounds/1.png" alt="Battle Background" loading="lazy">
+                    <div class="asset-label">Background<br><code>backgrounds/1.png</code></div>
+                </div>
+                <div class="asset-card">
+                    <img src="rpg-battle-system/char/paladin.png" alt="Paladin Hero" loading="lazy">
+                    <div class="asset-label">Hero (Paladin)<br><code>char/paladin.png</code></div>
+                </div>
+                <div class="asset-card">
+                    <img src="rpg-battle-system/monster/giant.png" alt="Giant Monster" loading="lazy">
+                    <div class="asset-label">Monster (Giant)<br><code>monster/giant.png</code></div>
+                </div>
+                <div class="asset-card">
+                    <img src="rpg-battle-system/HUD/bar/green.png" alt="Health Bar Green" loading="lazy">
+                    <div class="asset-label">HP Bar (Green)<br><code>HUD/bar/green.png</code></div>
+                </div>
+                <div class="asset-card">
+                    <img src="rpg-battle-system/HUD/bar/red.png" alt="Health Bar Red" loading="lazy">
+                    <div class="asset-label">HP Bar (Red)<br><code>HUD/bar/red.png</code></div>
+                </div>
+                <div class="asset-card">
+                    <img src="rpg-battle-system/HUD/bar/background.png" alt="Health Bar BG" loading="lazy">
+                    <div class="asset-label">Bar Background<br><code>HUD/bar/background.png</code></div>
+                </div>
+            </div>
+
+            <h3>Animated Sprite Sheets</h3>
+            <p>Characters come with <strong>sprite sheets</strong> — single images containing multiple animation frames
+                arranged in a grid. Each character folder includes sheets for idle, attack, and hit animations.</p>
+            <div class="asset-grid">
+                <div class="asset-card wide">
+                    <img src="rpg-battle-system/char/paladin/idle.gif" alt="Paladin Idle Animation" loading="lazy">
+                    <div class="asset-label">Paladin Idle<br><code>char/paladin/idle.gif</code></div>
+                </div>
+                <div class="asset-card wide">
+                    <img src="rpg-battle-system/char/paladin/attack.gif" alt="Paladin Attack Animation" loading="lazy">
+                    <div class="asset-label">Paladin Attack<br><code>char/paladin/attack.gif</code></div>
+                </div>
+                <div class="asset-card wide">
+                    <img src="rpg-battle-system/char/paladin/hit.gif" alt="Paladin Hit Animation" loading="lazy">
+                    <div class="asset-label">Paladin Hit<br><code>char/paladin/hit.gif</code></div>
+                </div>
+            </div>
+
+            <div class="info-box tip">
+                <strong>💡 Sprite Sheet Naming:</strong> The filename <code>sprite-sheet-249x100.png</code> tells you
+                each frame is <strong>249×100 pixels</strong>. You'll need these numbers when configuring your
+                <code>AnimatedSprite2D</code> node.
+            </div>
+        </section>
+
+        <!-- NODE TREE -->
+        <section id="node-tree">
+            <h2><span class="step-badge">2</span> Understanding the Node Tree</h2>
+            <p>Before building, let's understand how the scene is structured. In Godot, everything is organized as a
+                <strong>tree of nodes</strong>. Here's our battle scene hierarchy:
+            </p>
+
+            <div class="node-tree">
+                <div class="node root">📦 BattleScene <span class="node-type">(Node2D)</span></div>
+                <div class="node" style="margin-left:2rem">🖼️ Background <span class="node-type">(Sprite2D)</span>
+                </div>
+                <div class="node" style="margin-left:2rem">🧑 Hero <span class="node-type">(AnimatedSprite2D)</span>
+                    <div class="node" style="margin-left:2rem">💚 HeroHealthBar <span
+                            class="node-type">(TextureProgressBar)</span></div>
+                    <div class="node" style="margin-left:2rem">🏷️ HeroLabel <span class="node-type">(Label)</span>
+                    </div>
+                </div>
+                <div class="node" style="margin-left:2rem">👾 Monster <span class="node-type">(AnimatedSprite2D)</span>
+                    <div class="node" style="margin-left:2rem">❤️ MonsterHealthBar <span
+                            class="node-type">(TextureProgressBar)</span></div>
+                    <div class="node" style="margin-left:2rem">🏷️ MonsterLabel <span class="node-type">(Label)</span>
+                    </div>
+                </div>
+                <div class="node" style="margin-left:2rem">🎨 UI <span class="node-type">(CanvasLayer)</span>
+                    <div class="node" style="margin-left:2rem">📋 LogLabel <span class="node-type">(Label)</span></div>
+                    <div class="node" style="margin-left:2rem">📦 ButtonContainer <span
+                            class="node-type">(HBoxContainer)</span>
+                        <div class="node" style="margin-left:2rem">⚔️ AttackButton <span
+                                class="node-type">(Button)</span></div>
+                        <div class="node" style="margin-left:2rem">💊 HealButton <span class="node-type">(Button)</span>
+                        </div>
+                        <div class="node" style="margin-left:2rem">🛡️ DefendButton <span
+                                class="node-type">(Button)</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box warning">
+                <strong>⚠️ Important:</strong> Node names must match <em>exactly</em> what you use in your script's
+                <code>@onready</code> references. If you name a node <code>HealthBar</code> in the editor but reference
+                <code>$Hero/HpBar</code> in code, it won't work!
+            </div>
+        </section>
+
+        <!-- SCENE SETUP -->
+        <section id="scene-setup">
+            <h2><span class="step-badge">3</span> Scene Setup</h2>
+            <p>Now let's build the scene step by step.</p>
+
+            <h3>3.1 — Create the Root Scene</h3>
+            <ol>
+                <li>Open Godot and create a <strong>New Scene</strong>.</li>
+                <li>Choose <strong>Node2D</strong> as your root node.</li>
+                <li>Rename it to <code>BattleScene</code>.</li>
+                <li>Save the scene as <code>battle_scene.tscn</code>.</li>
+            </ol>
+
+            <h3>3.2 — Add the Background</h3>
+            <ol>
+                <li>Add a <strong>Sprite2D</strong> child node to <code>BattleScene</code>.</li>
+                <li>Rename it <code>Background</code>.</li>
+                <li>Drag <code>backgrounds/1.png</code> into the <em>Texture</em> property in the Inspector.</li>
+                <li>Set <em>Offset → Centered</em> to <strong>Off</strong> so the image starts from the top-left corner.
+                </li>
+            </ol>
+
+            <h3>3.3 — Add the Hero &amp; Monster</h3>
+            <p>We use <strong>AnimatedSprite2D</strong> instead of plain Sprite2D so we can play idle, attack, and hit
+                animations.</p>
+            <ol>
+                <li>Add an <strong>AnimatedSprite2D</strong> child under <code>BattleScene</code>. Rename it
+                    <code>Hero</code>.
+                </li>
+                <li>Add another <strong>AnimatedSprite2D</strong>. Rename it <code>Monster</code>.</li>
+            </ol>
+
+            <div class="properties-table">
+                <h4>Suggested Node Properties</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Node</th>
+                            <th>Property</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Background</td>
+                            <td>Position</td>
+                            <td>(0, 0)</td>
+                        </tr>
+                        <tr>
+                            <td>Hero</td>
+                            <td>Position</td>
+                            <td>(150, 200)</td>
+                        </tr>
+                        <tr>
+                            <td>Hero</td>
+                            <td>Scale</td>
+                            <td>(2, 2)</td>
+                        </tr>
+                        <tr>
+                            <td>Monster</td>
+                            <td>Position</td>
+                            <td>(500, 150)</td>
+                        </tr>
+                        <tr>
+                            <td>Monster</td>
+                            <td>Scale</td>
+                            <td>(2.5, 2.5)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>3.4 — Add Health Bars</h3>
+            <ol>
+                <li>Select the <code>Hero</code> node. Add a <strong>TextureProgressBar</strong> child. Rename it
+                    <code>HeroHealthBar</code>.
+                </li>
+                <li>In the Inspector, set these properties:
+                    <ul>
+                        <li><em>Min Value</em>: <code>0</code></li>
+                        <li><em>Max Value</em>: <code>100</code></li>
+                        <li><em>Value</em>: <code>100</code></li>
+                        <li><em>Texture Under</em>: drag <code>HUD/bar/background.png</code></li>
+                        <li><em>Texture Progress</em>: drag <code>HUD/bar/green.png</code></li>
+                    </ul>
+                </li>
+                <li>Repeat for the <code>Monster</code> node, but use <code>HUD/bar/red.png</code> for the progress
+                    texture.</li>
+            </ol>
+
+            <h3>3.5 — Add the UI Layer</h3>
+            <ol>
+                <li>Add a <strong>CanvasLayer</strong> child under <code>BattleScene</code>. Rename it <code>UI</code>.
+                </li>
+                <li>Under <code>UI</code>, add a <strong>Label</strong> named <code>LogLabel</code> — this will show
+                    battle messages.</li>
+                <li>Add an <strong>HBoxContainer</strong> named <code>ButtonContainer</code> and position it at the
+                    bottom of the screen.</li>
+                <li>Inside <code>ButtonContainer</code>, add three <strong>Button</strong> nodes:
+                    <code>AttackButton</code>, <code>HealButton</code>, and <code>DefendButton</code>.
+                </li>
+                <li>Set each button's <em>Text</em> property: <code>⚔️ Attack</code>, <code>💊 Heal</code>,
+                    <code>🛡️ Defend</code>.
+                </li>
+            </ol>
+        </section>
+
+        <!-- ANIMATED SPRITES -->
+        <section id="animated-sprites">
+            <h2><span class="step-badge">4</span> Setting Up Animated Sprites</h2>
+            <p>This is where your characters come to life! Instead of static images, we'll use <strong>sprite
+                    sheets</strong> — a grid of animation frames in a single image.</p>
+
+            <div class="info-box info">
+                <strong>📖 What is a Sprite Sheet?</strong> A sprite sheet packs multiple frames of animation into one
+                image file. The engine reads the sheet by splitting it into equal-sized rectangles (frames), then
+                displays them in sequence to create animation.
+            </div>
+
+            <h3>4.1 — Create a SpriteFrames Resource</h3>
+            <ol>
+                <li>Select the <code>Hero</code> (<strong>AnimatedSprite2D</strong>) node.</li>
+                <li>In the Inspector, find the <em>Sprite Frames</em> property and click <strong>&lt;empty&gt;</strong>
+                    → <strong>New SpriteFrames</strong>.</li>
+                <li>Click the SpriteFrames resource to open the <strong>SpriteFrames Editor</strong> at the bottom of
+                    the screen.</li>
+            </ol>
+
+            <h3>4.2 — Add the Idle Animation</h3>
+            <ol>
+                <li>In the Animations panel (left side), you'll see a "default" animation. Rename it to
+                    <code>idle</code>.
+                </li>
+                <li>Click the <strong>grid icon</strong> (📐 "Add frames from Sprite Sheet") button.</li>
+                <li>Select <code>char/paladin/sprite-sheet-249x100.png</code>.</li>
+                <li>A grid dialog will appear. Set:
+                    <ul>
+                        <li><em>Horizontal</em>: the number of columns in the sheet</li>
+                        <li><em>Vertical</em>: the number of rows in the sheet</li>
+                    </ul>
+                </li>
+                <li>Select only the <strong>idle frames</strong> (typically the first row) and click
+                    <strong>Add</strong>.
+                </li>
+                <li>Set the animation <strong>FPS</strong> to <code>8</code> for a natural pace.</li>
+                <li>Check the <strong>Loop</strong> toggle ✅ — idle should repeat continuously.</li>
+            </ol>
+
+            <div class="side-by-side">
+                <div class="side-item">
+                    <img src="rpg-battle-system/char/paladin/idle.gif" alt="Paladin idle animation" loading="lazy">
+                    <p class="caption">Idle animation (looping)</p>
+                </div>
+                <div class="side-item">
+                    <img src="rpg-battle-system/char/paladin/attack.gif" alt="Paladin attack animation" loading="lazy">
+                    <p class="caption">Attack animation (plays once)</p>
+                </div>
+                <div class="side-item">
+                    <img src="rpg-battle-system/char/paladin/hit.gif" alt="Paladin hit animation" loading="lazy">
+                    <p class="caption">Hit animation (plays once)</p>
+                </div>
+            </div>
+
+            <h3>4.3 — Add Attack &amp; Hit Animations</h3>
+            <ol>
+                <li>Click the <strong>+ Add Animation</strong> button to create a new animation named
+                    <code>attack</code>.
+                </li>
+                <li>Repeat the sprite sheet import process, selecting the <strong>attack frames</strong> from the sheet.
+                </li>
+                <li>Set FPS to <code>10</code>. <strong>Uncheck</strong> Loop — attack should play only once.</li>
+                <li>Create another animation named <code>hit</code>, import the hit frames, set FPS to <code>8</code>,
+                    no loop.</li>
+            </ol>
+
+            <h3>4.4 — Playing Animations in Code</h3>
+            <p>Here's how to trigger animations from your script:</p>
+
+            <pre><code><span class="kw">func</span> <span class="fn">play_hero_attack</span>():
+    <span class="comment"># Switch to the attack animation</span>
+    hero.play(<span class="str">"attack"</span>)
+    
+    <span class="comment"># Wait for the animation to finish</span>
+    <span class="kw">await</span> hero.animation_finished
+    
+    <span class="comment"># Return to idle</span>
+    hero.play(<span class="str">"idle"</span>)
+
+<span class="kw">func</span> <span class="fn">play_hero_hit</span>():
+    hero.play(<span class="str">"hit"</span>)
+    <span class="kw">await</span> hero.animation_finished
+    hero.play(<span class="str">"idle"</span>)</code></pre>
+
+            <div class="info-box tip">
+                <strong>💡 Tip:</strong> The <code>animation_finished</code> signal is emitted when a non-looping
+                animation reaches its last frame. We <code>await</code> it so the code pauses until the animation is
+                done, then we switch back to idle.
+            </div>
+
+            <h3>4.5 — Set Up the Monster</h3>
+            <p>Repeat Steps 4.1–4.3 for the <code>Monster</code> node. If the monster doesn't have a sprite sheet, you
+                can use the static <code>monster/giant.png</code> and create a simple "shake" effect using a
+                <strong>Tween</strong> instead:
+            </p>
+            <pre><code><span class="kw">func</span> <span class="fn">shake_monster</span>():
+    <span class="kw">var</span> original_pos = monster.position
+    <span class="kw">var</span> tween = create_tween()
+    tween.tween_property(monster, <span class="str">"position"</span>, 
+        original_pos + Vector2(<span class="num">10</span>, <span class="num">0</span>), <span class="num">0.05</span>)
+    tween.tween_property(monster, <span class="str">"position"</span>, 
+        original_pos - Vector2(<span class="num">10</span>, <span class="num">0</span>), <span class="num">0.05</span>)
+    tween.tween_property(monster, <span class="str">"position"</span>, 
+        original_pos, <span class="num">0.05</span>)
+    <span class="kw">await</span> tween.finished</code></pre>
+        </section>
+
+        <!-- CONNECTING SIGNALS -->
+        <section id="signals">
+            <h2><span class="step-badge">5</span> Connecting Signals</h2>
+            <p><strong>Signals</strong> are Godot's way of connecting events (like a button press) to functions in your
+                script. This is a crucial concept for beginners!</p>
+
+            <div class="info-box info">
+                <strong>📖 What are Signals?</strong> Think of signals as "announcements." When a button is pressed, it
+                <em>emits</em> a signal — like shouting "I was pressed!" Your script can <em>connect</em> to that signal
+                and respond with a function.
+            </div>
+
+            <p>Choose the method that works best for you:</p>
+
+            <div class="method-tabs">
+                <button class="method-tab active" onclick="switchTab(this, 'tab-ui')">🖱️ Option A: Via Godot
+                    UI</button>
+                <button class="method-tab" onclick="switchTab(this, 'tab-code')">📝 Option B: Via GDScript</button>
+            </div>
+
+            <div class="tab-content active" id="tab-ui">
+                <div class="info-box tip">
+                    <strong>👍 Recommended for beginners.</strong> The editor makes it easy to visually connect signals
+                    without typing code.
+                </div>
+                <ol>
+                    <li>Select the <code>AttackButton</code> node in the Scene tree.</li>
+                    <li>Go to the <strong>Node</strong> tab (next to Inspector) on the right panel.</li>
+                    <li>Find <code>pressed()</code> in the signal list and double-click it.</li>
+                    <li>A dialog appears. Select <code>BattleScene</code> as the target node.</li>
+                    <li>The method name will auto-fill as <code>_on_attack_button_pressed</code>. Click
+                        <strong>Connect</strong>.
+                    </li>
+                    <li>Repeat for <code>HealButton</code> → <code>_on_heal_button_pressed</code> and
+                        <code>DefendButton</code> → <code>_on_defend_button_pressed</code>.
+                    </li>
+                </ol>
+                <div class="info-box info">
+                    <strong>📖 How do I know it worked?</strong> After connecting, you'll see a green "connected" icon
+                    (🔗) next to the function in your script. If you click on the node, the Node tab will also show the
+                    connected signal with an arrow pointing to the target method.
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-code">
+                <div class="info-box tip">
+                    <strong>💪 Preferred by experienced developers.</strong> Connecting signals in code gives you more
+                    control and keeps all your logic in one place.
+                </div>
+                <p>Add these lines inside your <code>_ready()</code> function to connect each button's
+                    <code>pressed</code> signal to the corresponding handler function:
+                </p>
+                <pre><code><span class="kw">func</span> <span class="fn">_ready</span>():
+    <span class="comment"># Connect button signals to their handler functions</span>
+    attack_btn.pressed.connect(_on_attack_button_pressed)
+    heal_btn.pressed.connect(_on_heal_button_pressed)
+    defend_btn.pressed.connect(_on_defend_button_pressed)
+
+    <span class="comment"># Initialize the battle</span>
+    hero.play(<span class="str">"idle"</span>)
+    update_ui()
+    log_label.text = <span class="str">"A wild Giant appears!"</span></code></pre>
+                <div class="info-box info">
+                    <strong>📖 How does <code>.connect()</code> work?</strong> Every signal in Godot is an object.
+                    Calling <code>signal_name.connect(my_function)</code> tells Godot: "When this signal fires, call
+                    <code>my_function</code>." The function name is passed <em>without parentheses</em> — you're giving
+                    a reference, not calling it.
+                </div>
+            </div>
+
+            <div class="info-box warning">
+                <strong>⚠️ Common Error (both methods):</strong> If you see <em>"Cannot connect signal: method not
+                    found"</em>, double-check that the function name in your script matches exactly — including
+                underscores and capitalization.
+            </div>
+        </section>
+
+        <!-- SCRIPTING LOGIC -->
+        <section id="scripting">
+            <h2><span class="step-badge">6</span> The Battle Script</h2>
+            <p>Now for the main event — the GDScript that powers our battle! Attach a new script to
+                <code>BattleScene</code>. Let's build it piece by piece.
+            </p>
+
+            <h3>6.1 — Node References &amp; Variables</h3>
+            <p>First, we set up references to our scene nodes and declare our stats:</p>
+            <pre><code><span class="kw">extends</span> Node2D
+
+<span class="comment"># ─── Node References ───</span>
+<span class="comment"># @onready waits until all nodes are loaded before assigning</span>
+<span class="kw">@onready var</span> hero = $Hero
+<span class="kw">@onready var</span> monster = $Monster
+<span class="kw">@onready var</span> hero_health_bar = $Hero/HeroHealthBar
+<span class="kw">@onready var</span> monster_health_bar = $Monster/MonsterHealthBar
+<span class="kw">@onready var</span> log_label = $UI/LogLabel
+<span class="kw">@onready var</span> attack_btn = $UI/ButtonContainer/AttackButton
+<span class="kw">@onready var</span> heal_btn = $UI/ButtonContainer/HealButton
+<span class="kw">@onready var</span> defend_btn = $UI/ButtonContainer/DefendButton
+
+<span class="comment"># ─── Game Stats ───</span>
+<span class="kw">var</span> hero_hp : <span class="type">int</span> = <span class="num">100</span>
+<span class="kw">var</span> hero_max_hp : <span class="type">int</span> = <span class="num">100</span>
+<span class="kw">var</span> monster_hp : <span class="type">int</span> = <span class="num">100</span>
+<span class="kw">var</span> monster_max_hp : <span class="type">int</span> = <span class="num">100</span>
+<span class="kw">var</span> is_hero_turn : <span class="type">bool</span> = <span class="num">true</span>
+<span class="kw">var</span> is_defending : <span class="type">bool</span> = <span class="num">false</span>
+<span class="kw">var</span> battle_over : <span class="type">bool</span> = <span class="num">false</span></code></pre>
+
+            <div class="info-box info">
+                <strong>📖 About <code>@onready</code>:</strong> The <code>@onready</code> annotation assigns the
+                variable when the node enters the scene tree. Without it, the nodes might not exist yet and you'd get a
+                null error. Always use <code>@onready</code> for node references.
+            </div>
+
+            <h3>6.2 — Initialization</h3>
+            <pre><code><span class="kw">func</span> <span class="fn">_ready</span>():
+    <span class="comment"># Start both characters in idle animation</span>
+    hero.play(<span class="str">"idle"</span>)
+    monster.play(<span class="str">"idle"</span>)  <span class="comment"># or use static sprite if no sheet</span>
+    
+    update_ui()
+    log_label.text = <span class="str">"A wild Giant appears! Choose your action."</span></code></pre>
+
+            <h3>6.3 — UI Update Function</h3>
+            <pre><code><span class="kw">func</span> <span class="fn">update_ui</span>():
+    <span class="comment"># Sync health bar values with current HP</span>
+    hero_health_bar.value = hero_hp
+    monster_health_bar.value = monster_hp</code></pre>
+
+            <h3>6.4 — Helper: Toggle Buttons</h3>
+            <pre><code><span class="kw">func</span> <span class="fn">set_buttons_disabled</span>(disabled: <span class="type">bool</span>):
+    <span class="comment"># Prevent player from clicking during monster turn / animations</span>
+    attack_btn.disabled = disabled
+    heal_btn.disabled = disabled
+    defend_btn.disabled = disabled</code></pre>
+
+            <h3>6.5 — Attack Action</h3>
+            <pre><code><span class="kw">func</span> <span class="fn">_on_attack_button_pressed</span>():
+    <span class="kw">if not</span> is_hero_turn <span class="kw">or</span> battle_over: <span class="kw">return</span>
+    
+    set_buttons_disabled(<span class="num">true</span>)
+    is_defending = <span class="num">false</span>
+    
+    <span class="comment"># Play attack animation then wait for it to finish</span>
+    hero.play(<span class="str">"attack"</span>)
+    <span class="kw">await</span> hero.animation_finished
+    hero.play(<span class="str">"idle"</span>)
+    
+    <span class="comment"># Calculate random damage between 10 and 25</span>
+    <span class="kw">var</span> damage = randi_range(<span class="num">10</span>, <span class="num">25</span>)
+    monster_hp -= damage
+    monster_hp = max(<span class="num">0</span>, monster_hp)  <span class="comment"># Don't go below zero</span>
+    
+    log_label.text = <span class="str">"Hero deals "</span> + str(damage) + <span class="str">" damage!"</span>
+    update_ui()
+    
+    <span class="comment"># Check for victory before passing the turn</span>
+    <span class="kw">if</span> check_battle_end(): <span class="kw">return</span>
+    
+    is_hero_turn = <span class="num">false</span>
+    <span class="kw">await</span> get_tree().create_timer(<span class="num">1.0</span>).timeout
+    monster_turn()</code></pre>
+
+            <h3>6.6 — Heal Action</h3>
+            <pre><code><span class="kw">func</span> <span class="fn">_on_heal_button_pressed</span>():
+    <span class="kw">if not</span> is_hero_turn <span class="kw">or</span> battle_over: <span class="kw">return</span>
+    
+    set_buttons_disabled(<span class="num">true</span>)
+    is_defending = <span class="num">false</span>
+    
+    <span class="comment"># Heal 25 HP, but never exceed max HP</span>
+    <span class="kw">var</span> heal_amount = <span class="num">25</span>
+    hero_hp = min(hero_max_hp, hero_hp + heal_amount)
+    
+    log_label.text = <span class="str">"Hero heals "</span> + str(heal_amount) + <span class="str">" HP!"</span>
+    update_ui()
+    
+    is_hero_turn = <span class="num">false</span>
+    <span class="kw">await</span> get_tree().create_timer(<span class="num">1.0</span>).timeout
+    monster_turn()</code></pre>
+
+            <h3>6.7 — Monster's Turn</h3>
+            <pre><code><span class="kw">func</span> <span class="fn">monster_turn</span>():
+    <span class="kw">if</span> battle_over: <span class="kw">return</span>
+    
+    <span class="comment"># Monster attacks with random damage</span>
+    <span class="kw">var</span> base_damage = randi_range(<span class="num">8</span>, <span class="num">18</span>)
+    
+    <span class="comment"># If hero is defending, damage is halved</span>
+    <span class="kw">var</span> actual_damage = base_damage
+    <span class="kw">if</span> is_defending:
+        actual_damage = base_damage / <span class="num">2</span>
+        log_label.text = <span class="str">"Hero blocks! Takes only "</span> + str(actual_damage) + <span class="str">" damage."</span>
+    <span class="kw">else</span>:
+        log_label.text = <span class="str">"Monster hits Hero for "</span> + str(actual_damage) + <span class="str">"!"</span>
+    
+    <span class="comment"># Play hit animation on hero</span>
+    hero.play(<span class="str">"hit"</span>)
+    <span class="kw">await</span> hero.animation_finished
+    hero.play(<span class="str">"idle"</span>)
+    
+    hero_hp -= actual_damage
+    hero_hp = max(<span class="num">0</span>, hero_hp)
+    update_ui()
+    
+    <span class="kw">if</span> check_battle_end(): <span class="kw">return</span>
+    
+    is_hero_turn = <span class="num">true</span>
+    is_defending = <span class="num">false</span>
+    set_buttons_disabled(<span class="num">false</span>)</code></pre>
+        </section>
+
+        <!-- DEFEND ACTION -->
+        <section id="defend">
+            <h2><span class="step-badge">7</span> Bonus: Defend Action</h2>
+            <p>The Defend button adds tactical depth. When the hero defends, incoming damage is <strong>halved</strong>
+                on the next monster turn.</p>
+            <pre><code><span class="kw">func</span> <span class="fn">_on_defend_button_pressed</span>():
+    <span class="kw">if not</span> is_hero_turn <span class="kw">or</span> battle_over: <span class="kw">return</span>
+    
+    set_buttons_disabled(<span class="num">true</span>)
+    is_defending = <span class="num">true</span>
+    
+    log_label.text = <span class="str">"Hero braces for impact!"</span>
+    
+    is_hero_turn = <span class="num">false</span>
+    <span class="kw">await</span> get_tree().create_timer(<span class="num">1.0</span>).timeout
+    monster_turn()</code></pre>
+
+            <div class="info-box tip">
+                <strong>💡 Design Insight:</strong> The defend mechanic creates meaningful choices. Should the player
+                heal (recover HP) or defend (reduce incoming damage)? This risk-vs-reward decision makes the battle more
+                strategic and fun.
+            </div>
+        </section>
+
+        <!-- VICTORY & DEFEAT -->
+        <section id="win-lose">
+            <h2><span class="step-badge">8</span> Victory &amp; Defeat</h2>
+            <p>Every battle needs an ending! Let's detect when either the hero or monster runs out of HP:</p>
+            <pre><code><span class="kw">func</span> <span class="fn">check_battle_end</span>() -> <span class="type">bool</span>:
+    <span class="kw">if</span> monster_hp <= <span class="num">0</span>:
+        log_label.text = <span class="str">"🎉 Victory! The Monster is defeated!"</span>
+        battle_over = <span class="num">true</span>
+        set_buttons_disabled(<span class="num">true</span>)
+        <span class="comment"># Optional: play a victory animation or effect</span>
+        <span class="kw">return true</span>
+    
+    <span class="kw">if</span> hero_hp <= <span class="num">0</span>:
+        log_label.text = <span class="str">"💀 Defeat... The Hero has fallen."</span>
+        battle_over = <span class="num">true</span>
+        set_buttons_disabled(<span class="num">true</span>)
+        <span class="comment"># Optional: play a defeat animation</span>
+        <span class="kw">return true</span>
+    
+    <span class="kw">return false</span></code></pre>
+
+            <div class="info-box info">
+                <strong>📖 Why return a <code>bool</code>?</strong> By returning <code>true</code> when the battle ends,
+                we can use <code>if check_battle_end(): return</code> in our attack/heal functions to immediately stop
+                processing. This prevents the monster from attacking after it's already dead!
+            </div>
+        </section>
+
+        <!-- CHALLENGES -->
+        <section id="challenges">
+            <h2><span class="step-badge">9</span> Challenge Exercises</h2>
+            <p>Ready to level up? Try these extensions on your own:</p>
+
+            <div class="challenge-grid">
+                <div class="challenge-card easy">
+                    <div class="difficulty">⭐ Easy</div>
+                    <h4>Flee Button</h4>
+                    <p>Add a "Flee" button with a <strong>50% chance</strong> to escape. Use
+                        <code>randi_range(0, 1)</code> to decide success. If it fails, the monster gets a free attack.
+                    </p>
+                </div>
+                <div class="challenge-card easy">
+                    <div class="difficulty">⭐ Easy</div>
+                    <h4>Damage Numbers</h4>
+                    <p>Show floating damage numbers at the hit location that fade upward. Use a <strong>Label</strong>
+                        with a <strong>Tween</strong> to animate the position and opacity.</p>
+                </div>
+                <div class="challenge-card medium">
+                    <div class="difficulty">⭐⭐ Medium</div>
+                    <h4>MP &amp; Special Attack</h4>
+                    <p>Add a Mana Points (MP) system. The hero starts with 50 MP. A special attack costs 20 MP but deals
+                        30–50 damage. Add a blue progress bar using <code>HUD/bar/purple.png</code>.</p>
+                </div>
+                <div class="challenge-card medium">
+                    <div class="difficulty">⭐⭐ Medium</div>
+                    <h4>Multiple Monsters</h4>
+                    <p>Use an <strong>Array</strong> to store multiple monsters with separate HP values. Let the player
+                        choose which monster to target.</p>
+                </div>
+                <div class="challenge-card hard">
+                    <div class="difficulty">⭐⭐⭐ Hard</div>
+                    <h4>Character Swap</h4>
+                    <p>Let the player choose a character class at the start (Paladin, Wizard, Bowman, Warrior) — each
+                        with different stats. Use the sprite sheets from the <code>char/</code> folders.</p>
+                </div>
+                <div class="challenge-card hard">
+                    <div class="difficulty">⭐⭐⭐ Hard</div>
+                    <h4>Sound Effects &amp; Music</h4>
+                    <p>Add background music (from <code>music/</code>) and sound effects (from <code>sound/</code>)
+                        using <strong>AudioStreamPlayer</strong>. Trigger them on attack, heal, victory, and defeat.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- GLOSSARY -->
+        <section id="glossary">
+            <h2><span class="step-badge">📚</span> GDScript Glossary</h2>
+            <p>Quick reference for the GDScript concepts used in this tutorial:</p>
+
+            <div class="glossary-grid">
+                <div class="glossary-item">
+                    <code>@onready</code>
+                    <p>Assigns a variable when the node enters the scene tree. Used for node references so they're
+                        guaranteed to exist.</p>
+                </div>
+                <div class="glossary-item">
+                    <code>$NodePath</code>
+                    <p>Shorthand for <code>get_node("NodePath")</code>. Finds a child node by its path relative to the
+                        current node.</p>
+                </div>
+                <div class="glossary-item">
+                    <code>await</code>
+                    <p>Pauses the function until a signal is emitted. Used to wait for timers, animations, or other
+                        async operations.</p>
+                </div>
+                <div class="glossary-item">
+                    <code>signal</code>
+                    <p>An event notification system. Nodes emit signals (like <code>pressed</code>) and other nodes can
+                        respond by connecting a function.</p>
+                </div>
+                <div class="glossary-item">
+                    <code>randi_range(min, max)</code>
+                    <p>Returns a random integer between <code>min</code> and <code>max</code> (inclusive). Perfect for
+                        damage variation.</p>
+                </div>
+                <div class="glossary-item">
+                    <code>AnimatedSprite2D</code>
+                    <p>A node that plays frame-based animations from a SpriteFrames resource. Supports multiple named
+                        animations (idle, attack, etc).</p>
+                </div>
+                <div class="glossary-item">
+                    <code>SpriteFrames</code>
+                    <p>A resource that holds animation data — frame images, playback speed, and loop settings — for an
+                        AnimatedSprite2D.</p>
+                </div>
+                <div class="glossary-item">
+                    <code>TextureProgressBar</code>
+                    <p>A progress bar that uses textures for its appearance. Set <em>Under</em> (background) and
+                        <em>Progress</em> (fill) textures.
+                    </p>
+                </div>
+                <div class="glossary-item">
+                    <code>Tween</code>
+                    <p>Smoothly animates properties over time. Great for shake effects, fading, and movement without
+                        keyframe animations.</p>
+                </div>
+                <div class="glossary-item">
+                    <code>create_timer(sec)</code>
+                    <p>Creates a one-shot timer. Combined with <code>await</code>, it pauses execution for the specified
+                        seconds.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- RUBRIC -->
+        <section id="rubric">
+            <h2><span class="step-badge">📋</span> Scoring Rubric</h2>
+            <p>This activity is worth <strong>50 points</strong>. Your submission will be graded based on the following
+                criteria:</p>
+
+            <table class="rubric-table">
+                <thead>
+                    <tr>
+                        <th>Criteria</th>
+                        <th>Description</th>
+                        <th>Points</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Scene Setup</strong></td>
+                        <td>Correct node tree structure: BattleScene root, Background, Hero, Monster, UI layer with
+                            buttons and log label. Proper naming of all nodes.</td>
+                        <td class="pts">10</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Animated Sprites</strong></td>
+                        <td>Hero uses <code>AnimatedSprite2D</code> with a working SpriteFrames resource. Idle, attack,
+                            and hit animations are configured and play correctly.</td>
+                        <td class="pts">10</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Health Bars &amp; UI</strong></td>
+                        <td>Both Hero and Monster have <code>TextureProgressBar</code> nodes with correct textures.
+                            Health bars update accurately during battle. Log label displays messages.</td>
+                        <td class="pts">8</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Battle Logic</strong></td>
+                        <td>Attack deals random damage, Heal restores HP (capped at max), turns alternate between Hero
+                            and Monster. Buttons are disabled during the Monster's turn.</td>
+                        <td class="pts">10</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Signal Connections</strong></td>
+                        <td>All three buttons are correctly connected to their handler functions (via editor or code).
+                            No errors on button press.</td>
+                        <td class="pts">5</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Victory &amp; Defeat</strong></td>
+                        <td>The game correctly detects when HP reaches 0. Displays a victory or defeat message and
+                            disables buttons when the battle ends.</td>
+                        <td class="pts">5</td>
+                    </tr>
+                    <tr class="bonus-row">
+                        <td><strong>Bonus: Defend</strong></td>
+                        <td>Defend button is implemented and reduces incoming damage by half on the next Monster turn.
+                        </td>
+                        <td class="pts">2</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td colspan="2"><strong>Total</strong></td>
+                        <td class="pts"><strong>50</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box tip">
+                <strong>💡 How to get full marks:</strong> Make sure your project runs without errors, all animations
+                play correctly, and the battle flows from start to finish (either victory or defeat). Test your game
+                multiple times before submitting!
+            </div>
+        </section>
+
+        <!-- MINI QUIZ -->
+        <section id="quiz">
+            <h2><span class="step-badge">❓</span> Mini Quiz</h2>
+            <p>Test what you've learned! This quiz is <strong>not graded</strong> — it's just for self-assessment. Pick
+                the best answer for each question, then check your score.</p>
+
+            <div class="quiz-container" id="quizContainer">
+                <div class="quiz-question" data-correct="b">
+                    <div class="q-number">1</div>
+                    <p class="q-text">What is the correct node type for displaying animated character sprites?</p>
+                    <label class="q-option"><input type="radio" name="q1" value="a"><span>Sprite2D</span></label>
+                    <label class="q-option"><input type="radio" name="q1"
+                            value="b"><span>AnimatedSprite2D</span></label>
+                    <label class="q-option"><input type="radio" name="q1" value="c"><span>TextureRect</span></label>
+                    <label class="q-option"><input type="radio" name="q1" value="d"><span>AnimationPlayer</span></label>
+                    <div class="q-feedback"><strong>AnimatedSprite2D</strong> is specifically designed for frame-based
+                        sprite animations using a SpriteFrames resource.</div>
+                </div>
+
+                <div class="quiz-question" data-correct="c">
+                    <div class="q-number">2</div>
+                    <p class="q-text">What does the <code>@onready</code> annotation do?</p>
+                    <label class="q-option"><input type="radio" name="q2" value="a"><span>Makes the variable
+                            constant</span></label>
+                    <label class="q-option"><input type="radio" name="q2" value="b"><span>Exports the variable to the
+                            Inspector</span></label>
+                    <label class="q-option"><input type="radio" name="q2" value="c"><span>Assigns the variable when the
+                            node enters the scene tree</span></label>
+                    <label class="q-option"><input type="radio" name="q2" value="d"><span>Runs the variable in a
+                            separate thread</span></label>
+                    <div class="q-feedback"><strong>@onready</strong> delays assignment until the node is in the scene
+                        tree, ensuring referenced nodes exist.</div>
+                </div>
+
+                <div class="quiz-question" data-correct="b">
+                    <div class="q-number">3</div>
+                    <p class="q-text">How do you connect a button's <code>pressed</code> signal via GDScript?</p>
+                    <label class="q-option"><input type="radio" name="q3"
+                            value="a"><span><code>button.connect("pressed", self)</code></span></label>
+                    <label class="q-option"><input type="radio" name="q3"
+                            value="b"><span><code>button.pressed.connect(my_function)</code></span></label>
+                    <label class="q-option"><input type="radio" name="q3"
+                            value="c"><span><code>button.signal(pressed, my_function)</code></span></label>
+                    <label class="q-option"><input type="radio" name="q3"
+                            value="d"><span><code>connect(button.pressed)</code></span></label>
+                    <div class="q-feedback">In Godot 4.x, signals use the <strong>.connect()</strong> method directly:
+                        <code>signal.connect(callable)</code>.
+                    </div>
+                </div>
+
+                <div class="quiz-question" data-correct="a">
+                    <div class="q-number">4</div>
+                    <p class="q-text">What does <code>randi_range(10, 25)</code> return?</p>
+                    <label class="q-option"><input type="radio" name="q4" value="a"><span>A random integer between 10
+                            and 25 (inclusive)</span></label>
+                    <label class="q-option"><input type="radio" name="q4" value="b"><span>Always returns
+                            10</span></label>
+                    <label class="q-option"><input type="radio" name="q4" value="c"><span>A random float between 10.0
+                            and 25.0</span></label>
+                    <label class="q-option"><input type="radio" name="q4" value="d"><span>A random integer between 0 and
+                            25</span></label>
+                    <div class="q-feedback"><strong>randi_range(min, max)</strong> returns a random <em>integer</em>
+                        between min and max, both inclusive.</div>
+                </div>
+
+                <div class="quiz-question" data-correct="d">
+                    <div class="q-number">5</div>
+                    <p class="q-text">Which node is used for the health bar in this tutorial?</p>
+                    <label class="q-option"><input type="radio" name="q5" value="a"><span>ProgressBar</span></label>
+                    <label class="q-option"><input type="radio" name="q5" value="b"><span>HSlider</span></label>
+                    <label class="q-option"><input type="radio" name="q5" value="c"><span>ColorRect</span></label>
+                    <label class="q-option"><input type="radio" name="q5"
+                            value="d"><span>TextureProgressBar</span></label>
+                    <div class="q-feedback"><strong>TextureProgressBar</strong> lets you use custom textures for the
+                        bar's background and fill, matching the pixel art style.</div>
+                </div>
+
+                <div class="quiz-question" data-correct="c">
+                    <div class="q-number">6</div>
+                    <p class="q-text">Why do we use <code>await hero.animation_finished</code> after playing an attack?
+                    </p>
+                    <label class="q-option"><input type="radio" name="q6" value="a"><span>It loops the animation
+                            forever</span></label>
+                    <label class="q-option"><input type="radio" name="q6" value="b"><span>It deletes the
+                            animation</span></label>
+                    <label class="q-option"><input type="radio" name="q6" value="c"><span>It pauses the code until the
+                            animation finishes playing</span></label>
+                    <label class="q-option"><input type="radio" name="q6" value="d"><span>It speeds up the
+                            animation</span></label>
+                    <div class="q-feedback"><strong>await</strong> pauses execution of the current function until the
+                        specified signal is emitted — in this case, when the animation reaches its last frame.</div>
+                </div>
+
+                <div class="quiz-question" data-correct="b">
+                    <div class="q-number">7</div>
+                    <p class="q-text">What does the Defend action do in our battle system?</p>
+                    <label class="q-option"><input type="radio" name="q7" value="a"><span>Heals the hero for 50
+                            HP</span></label>
+                    <label class="q-option"><input type="radio" name="q7" value="b"><span>Halves the damage from the
+                            monster's next attack</span></label>
+                    <label class="q-option"><input type="radio" name="q7" value="c"><span>Skips the monster's turn
+                            entirely</span></label>
+                    <label class="q-option"><input type="radio" name="q7" value="d"><span>Doubles the hero's next attack
+                            damage</span></label>
+                    <div class="q-feedback">When <code>is_defending = true</code>, the monster's damage is divided by 2
+                        before being applied to the hero's HP.</div>
+                </div>
+
+                <div class="quiz-question" data-correct="a">
+                    <div class="q-number">8</div>
+                    <p class="q-text">What is a <strong>SpriteFrames</strong> resource?</p>
+                    <label class="q-option"><input type="radio" name="q8" value="a"><span>A resource that holds
+                            animation frames, speed, and loop settings for AnimatedSprite2D</span></label>
+                    <label class="q-option"><input type="radio" name="q8" value="b"><span>A type of shader for pixel
+                            art</span></label>
+                    <label class="q-option"><input type="radio" name="q8" value="c"><span>A built-in physics engine
+                            component</span></label>
+                    <label class="q-option"><input type="radio" name="q8" value="d"><span>A Godot plugin for importing
+                            3D models</span></label>
+                    <div class="q-feedback"><strong>SpriteFrames</strong> stores named animations, each with frame
+                        images, FPS, and loop settings, used by AnimatedSprite2D.</div>
+                </div>
+
+                <div class="quiz-question" data-correct="d">
+                    <div class="q-number">9</div>
+                    <p class="q-text">What does <code>create_tween()</code> do?</p>
+                    <label class="q-option"><input type="radio" name="q9" value="a"><span>Creates a new
+                            scene</span></label>
+                    <label class="q-option"><input type="radio" name="q9" value="b"><span>Creates a timer
+                            node</span></label>
+                    <label class="q-option"><input type="radio" name="q9" value="c"><span>Creates a new
+                            signal</span></label>
+                    <label class="q-option"><input type="radio" name="q9" value="d"><span>Creates an object that
+                            smoothly animates properties over time</span></label>
+                    <div class="q-feedback"><strong>Tween</strong> smoothly interpolates properties (position, opacity,
+                        scale, etc.) from one value to another over a set duration.</div>
+                </div>
+
+                <div class="quiz-question" data-correct="c">
+                    <div class="q-number">10</div>
+                    <p class="q-text">Why does <code>check_battle_end()</code> return a <code>bool</code>?</p>
+                    <label class="q-option"><input type="radio" name="q10" value="a"><span>So it can store the player's
+                            score</span></label>
+                    <label class="q-option"><input type="radio" name="q10" value="b"><span>So it can restart the
+                            battle</span></label>
+                    <label class="q-option"><input type="radio" name="q10" value="c"><span>So the calling function can
+                            immediately stop if the battle is over</span></label>
+                    <label class="q-option"><input type="radio" name="q10" value="d"><span>So it can print a message to
+                            the console</span></label>
+                    <div class="q-feedback">Returning <code>true</code> lets us write
+                        <code>if check_battle_end(): return</code> — stopping the function early so the monster doesn't
+                        attack after dying.
+                    </div>
+                </div>
+            </div>
+
+            <div class="quiz-actions">
+                <button class="quiz-btn" id="quizSubmit" onclick="gradeQuiz()">📊 Check My Answers</button>
+                <button class="quiz-btn secondary" id="quizReset" onclick="resetQuiz()" style="display:none">🔄 Try
+                    Again</button>
+            </div>
+            <div class="quiz-result" id="quizResult"></div>
+        </section>
+
+        <!-- CONCLUSION -->
+        <section id="conclusion">
+            <h2>What's Next?</h2>
+            <p>Congratulations! 🎉 You've built a complete turn-based battle system with animated sprites. Here are more
+                ways to expand your game:</p>
+            <ul>
+                <li><strong>Visual Effects:</strong> Use the FX sprites in <code>rpg-battle-system/fx/</code> for spell
+                    and hit particles.</li>
+                <li><strong>Items System:</strong> The <code>item/</code> folder has 80+ icons — build an inventory and
+                    consumable items.</li>
+                <li><strong>Multiple Scenes:</strong> Create an overworld map that transitions into the battle scene on
+                    encounters.</li>
+                <li><strong>Save &amp; Load:</strong> Use Godot's <code>FileAccess</code> API to save player progress
+                    between battles.</li>
+            </ul>
+        </section>
+
+    </div>
+
+    <button class="scroll-top" id="scrollTop" title="Back to top">↑</button>
+
+    <footer>
+        <p><strong>EMC 202</strong> — Introduction to Game Design and Development</p>
+        <p>Instructor: Mark Joseph J. Solidarios · West Visayas State University, CICT</p>
+        <p>Built with ❤️ for my EMC 1A Class</p>
+    </footer>
+
+    <script>
+        // Tab switching for signals section
+        function switchTab(button, tabId) {
+            document.querySelectorAll('.method-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            button.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+        window.switchTab = switchTab;
+
+        // Quiz grading
+        function gradeQuiz() {
+            const questions = document.querySelectorAll('.quiz-question');
+            let score = 0;
+            let unanswered = 0;
+
+            questions.forEach((q, i) => {
+                const correct = q.dataset.correct;
+                const selected = q.querySelector(`input[name="q${i + 1}"]:checked`);
+                const options = q.querySelectorAll('.q-option');
+                const feedback = q.querySelector('.q-feedback');
+
+                // Disable all radio buttons
+                q.querySelectorAll('input[type="radio"]').forEach(r => r.disabled = true);
+
+                if (!selected) {
+                    unanswered++;
+                    q.classList.add('unanswered');
+                    // Highlight the correct one
+                    options.forEach(o => {
+                        if (o.querySelector('input').value === correct) o.classList.add('correct');
+                    });
+                    feedback.style.display = 'block';
+                    return;
+                }
+
+                const value = selected.value;
+                if (value === correct) {
+                    score++;
+                    q.classList.add('answered-correct');
+                    selected.closest('.q-option').classList.add('correct');
+                } else {
+                    q.classList.add('answered-wrong');
+                    selected.closest('.q-option').classList.add('wrong');
+                    // Show where the correct answer is
+                    options.forEach(o => {
+                        if (o.querySelector('input').value === correct) o.classList.add('correct');
+                    });
+                }
+                feedback.style.display = 'block';
+            });
+
+            // Show result
+            const resultDiv = document.getElementById('quizResult');
+            let msg = '';
+            const pct = Math.round((score / questions.length) * 100);
+            if (pct === 100) msg = '🏆 Perfect score! You really mastered this tutorial!';
+            else if (pct >= 70) msg = '🎉 Great job! You have a solid understanding.';
+            else if (pct >= 50) msg = '👍 Not bad! Review the sections you missed and try again.';
+            else msg = '📖 Keep studying! Re-read the tutorial sections and give it another shot.';
+
+            resultDiv.innerHTML = `<div class="score-display">${score} / ${questions.length}</div><p>${msg}</p>`;
+            resultDiv.className = 'quiz-result visible';
+
+            document.getElementById('quizSubmit').style.display = 'none';
+            document.getElementById('quizReset').style.display = 'inline-flex';
+        }
+        window.gradeQuiz = gradeQuiz;
+
+        function resetQuiz() {
+            const questions = document.querySelectorAll('.quiz-question');
+            questions.forEach(q => {
+                q.classList.remove('answered-correct', 'answered-wrong', 'unanswered');
+                q.querySelectorAll('input[type="radio"]').forEach(r => { r.disabled = false; r.checked = false; });
+                q.querySelectorAll('.q-option').forEach(o => o.classList.remove('correct', 'wrong'));
+                q.querySelector('.q-feedback').style.display = 'none';
+            });
+            document.getElementById('quizResult').className = 'quiz-result';
+            document.getElementById('quizResult').innerHTML = '';
+            document.getElementById('quizSubmit').style.display = 'inline-flex';
+            document.getElementById('quizReset').style.display = 'none';
+        }
+        window.resetQuiz = resetQuiz;
+
+        // Dark mode toggle
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            themeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        });
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+            themeToggle.textContent = '☀️';
+        }
+
+        // TOC toggle
+        const tocToggle = document.getElementById('tocToggle');
+        const sideNav = document.getElementById('sideNav');
+        tocToggle.addEventListener('click', () => {
+            sideNav.classList.toggle('open');
+        });
+
+        // Highlight active TOC on scroll
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.side-nav a');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const top = section.offsetTop - 120;
+                if (window.scrollY >= top) current = section.getAttribute('id');
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+            });
+        });
+
+        // Scroll to top button
+        const scrollTopBtn = document.getElementById('scrollTop');
+        window.addEventListener('scroll', () => {
+            scrollTopBtn.classList.toggle('visible', window.scrollY > 400);
+        });
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Close nav on link click (mobile)
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => sideNav.classList.remove('open'));
+        });
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                e.preventDefault();
+                const target = document.querySelector(a.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
+
+</body>
+
+</html>
