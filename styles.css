@@ -1176,6 +1176,341 @@ ul li {
     }
 }
 
+/* ── Custom Flow Diagram ── */
+.flow-diagram {
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 2rem 1.5rem;
+    margin: 1rem 0 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+}
+
+.flow-node {
+    padding: 0.65rem 1.4rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-align: center;
+    max-width: 360px;
+    width: 100%;
+    border: 2px solid transparent;
+    transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.flow-node:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+.flow-start {
+    background: #478cbf;
+    color: #fff;
+    border-color: #3a75a0;
+    border-radius: 50px;
+}
+
+.flow-hero {
+    background: #e8f5e9;
+    color: #1b5e20;
+    border-color: #a5d6a7;
+}
+
+.flow-monster {
+    background: #fce4ec;
+    color: #b71c1c;
+    border-color: #f48fb1;
+}
+
+.flow-decision {
+    background: #fff8e1;
+    color: #6d4c00;
+    border-color: #ffca28;
+    transform: none;
+    clip-path: none;
+    position: relative;
+}
+
+.flow-decision::before {
+    content: '◆';
+    position: absolute;
+    left: 0.8rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #f0a500;
+    font-size: 0.7rem;
+}
+
+.flow-system {
+    background: #f3e5f5;
+    color: #4a148c;
+    border-color: #ce93d8;
+}
+
+body.dark-mode .flow-hero {
+    background: rgba(166, 227, 161, 0.15);
+    color: #a6e3a1;
+    border-color: rgba(166, 227, 161, 0.3);
+}
+
+body.dark-mode .flow-monster {
+    background: rgba(243, 139, 168, 0.15);
+    color: #f38ba8;
+    border-color: rgba(243, 139, 168, 0.3);
+}
+
+body.dark-mode .flow-decision {
+    background: rgba(255, 202, 40, 0.12);
+    color: #ffca28;
+    border-color: rgba(255, 202, 40, 0.3);
+}
+
+body.dark-mode .flow-decision::before {
+    color: #ffca28;
+}
+
+body.dark-mode .flow-system {
+    background: rgba(203, 166, 247, 0.12);
+    color: #cba6f7;
+    border-color: rgba(203, 166, 247, 0.3);
+}
+
+body.dark-mode .flow-start {
+    background: #478cbf;
+    color: #fff;
+}
+
+/* ── Flow Arrows ── */
+.flow-arrow {
+    color: var(--text-muted);
+    font-size: 1rem;
+    line-height: 1;
+    padding: 0.3rem 0;
+    user-select: none;
+}
+
+.flow-arrow-sm {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    line-height: 1;
+    padding: 0.2rem 0;
+    user-select: none;
+}
+
+.flow-merge {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--primary);
+    padding: 0.5rem 0;
+}
+
+/* ── Phase Containers ── */
+.flow-phase {
+    width: 100%;
+    max-width: 540px;
+    border-radius: var(--radius);
+    padding: 1.2rem 1rem;
+    margin: 0.2rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    position: relative;
+}
+
+.flow-phase-hero {
+    background: rgba(76, 175, 80, 0.04);
+    border: 2px dashed #a5d6a7;
+}
+
+.flow-phase-monster {
+    background: rgba(244, 67, 54, 0.04);
+    border: 2px dashed #f48fb1;
+}
+
+body.dark-mode .flow-phase-hero {
+    background: rgba(76, 175, 80, 0.06);
+    border-color: rgba(166, 227, 161, 0.25);
+}
+
+body.dark-mode .flow-phase-monster {
+    background: rgba(244, 67, 54, 0.06);
+    border-color: rgba(243, 139, 168, 0.25);
+}
+
+.flow-phase-label {
+    position: absolute;
+    top: -0.7rem;
+    left: 1rem;
+    background: var(--surface-alt);
+    padding: 0 0.6rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+}
+
+body.dark-mode .flow-phase-label {
+    background: var(--surface-alt);
+}
+
+/* ── Branches (Attack / Heal / Defend) ── */
+.flow-branches {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.6rem;
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
+.flow-branch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.6rem 0.4rem;
+    border-radius: var(--radius-sm);
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px solid var(--border);
+}
+
+body.dark-mode .flow-branch {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.flow-branch .flow-node {
+    font-size: 0.78rem;
+    padding: 0.45rem 0.6rem;
+    max-width: none;
+    width: auto;
+}
+
+.flow-branch-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.15rem;
+}
+
+/* ── Outcome Rows (Victory / Defeat splits) ── */
+.flow-outcome-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+    width: 100%;
+    max-width: 440px;
+    margin: 0.3rem 0;
+}
+
+.flow-outcome {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem;
+    border-radius: var(--radius-sm);
+}
+
+.flow-outcome-yes {
+    background: rgba(244, 67, 54, 0.04);
+    border: 1px dashed rgba(244, 67, 54, 0.3);
+}
+
+.flow-outcome-no {
+    background: rgba(76, 175, 80, 0.04);
+    border: 1px dashed rgba(76, 175, 80, 0.3);
+}
+
+body.dark-mode .flow-outcome-yes {
+    background: rgba(244, 67, 54, 0.06);
+}
+
+body.dark-mode .flow-outcome-no {
+    background: rgba(76, 175, 80, 0.06);
+}
+
+.flow-outcome-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.flow-outcome .flow-node {
+    font-size: 0.82rem;
+    padding: 0.5rem 0.8rem;
+}
+
+/* ── Defend Row ── */
+.flow-defend-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+    width: 100%;
+    max-width: 360px;
+    margin-top: 0.4rem;
+}
+
+.flow-defend-option {
+    text-align: center;
+    font-size: 0.82rem;
+    padding: 0.5rem 0.6rem;
+    border-radius: var(--radius-sm);
+    background: rgba(255, 202, 40, 0.08);
+    border: 1px solid rgba(255, 202, 40, 0.2);
+    color: var(--text);
+}
+
+/* ── Loop Back Indicator ── */
+.flow-loop-back {
+    margin-top: 0.5rem;
+    padding: 0.7rem 1.4rem;
+    border-radius: 50px;
+    background: linear-gradient(135deg, rgba(71, 140, 191, 0.1), rgba(71, 140, 191, 0.05));
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-align: center;
+    animation: loopPulse 2s ease-in-out infinite;
+}
+
+@keyframes loopPulse {
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(71, 140, 191, 0.3);
+    }
+
+    50% {
+        box-shadow: 0 0 0 8px rgba(71, 140, 191, 0);
+    }
+}
+
+/* ── Responsive Flow Diagram ── */
+@media (max-width: 640px) {
+    .flow-branches {
+        grid-template-columns: 1fr;
+    }
+
+    .flow-outcome-row {
+        grid-template-columns: 1fr;
+    }
+
+    .flow-defend-row {
+        grid-template-columns: 1fr;
+    }
+
+    .flow-phase {
+        padding: 1rem 0.6rem;
+    }
+}
+
 /* ── Large Screen Optimization ── */
 @media (min-width: 1600px) {
     :root {

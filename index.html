@@ -32,6 +32,7 @@
         <a href="#scene-setup">Scene Setup</a>
         <a href="#animated-sprites">Animated Sprites</a>
         <a href="#signals">Connecting Signals</a>
+        <a href="#battle-loop">The Battle Loop (Flow)</a>
         <a href="#scripting">Battle Script</a>
         <a href="#defend">Bonus: Defend Action</a>
         <a href="#win-lose">Victory &amp; Defeat</a>
@@ -512,9 +513,144 @@
             </div>
         </section>
 
+        <!-- BATTLE LOOP -->
+        <section id="battle-loop">
+            <h2><span class="step-badge">6</span> The Battle Loop</h2>
+            <p>Before we write any code, let's <strong>visualize the entire battle flow</strong>. This diagram shows
+                exactly what happens each turn — follow the arrows from top to bottom!</p>
+
+            <div class="diagram-legend">
+                <span class="legend-item"><span class="legend-dot" style="background:#478cbf"></span> Start / End</span>
+                <span class="legend-item"><span class="legend-dot" style="background:#a6e3a1"></span> Hero Action</span>
+                <span class="legend-item"><span class="legend-dot" style="background:#f38ba8"></span> Monster
+                    Action</span>
+                <span class="legend-item"><span class="legend-dot" style="background:#ffca28"></span> Decision</span>
+                <span class="legend-item"><span class="legend-dot" style="background:#cba6f7"></span> System</span>
+            </div>
+
+            <div class="flow-diagram">
+
+                <!-- START -->
+                <div class="flow-node flow-start">🎮 Start Battle</div>
+                <div class="flow-arrow">▼</div>
+                <div class="flow-node flow-system">🔄 Initialize scene &amp; play idle animations</div>
+                <div class="flow-arrow">▼</div>
+
+                <!-- HERO PHASE -->
+                <div class="flow-phase flow-phase-hero">
+                    <div class="flow-phase-label">🧑 Hero's Turn</div>
+
+                    <div class="flow-node flow-hero">⏳ Wait for player input</div>
+                    <div class="flow-arrow">▼</div>
+                    <div class="flow-node flow-decision">🎯 What will you do?</div>
+
+                    <div class="flow-branches">
+                        <div class="flow-branch">
+                            <div class="flow-branch-label">⚔️ Attack</div>
+                            <div class="flow-node flow-hero">Play hero attack animation</div>
+                            <div class="flow-arrow-sm">▼</div>
+                            <div class="flow-node flow-monster">👾 Monster takes 15–25 damage</div>
+                        </div>
+                        <div class="flow-branch">
+                            <div class="flow-branch-label">💊 Heal</div>
+                            <div class="flow-node flow-hero">Restore hero HP +25</div>
+                        </div>
+                        <div class="flow-branch">
+                            <div class="flow-branch-label">🛡️ Defend</div>
+                            <div class="flow-node flow-hero">Set defend flag = true</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow flow-merge">▼ All paths merge</div>
+
+                <!-- CHECK 1 -->
+                <div class="flow-node flow-system">📊 Update health bars</div>
+                <div class="flow-arrow">▼</div>
+                <div class="flow-node flow-decision">💀 Anyone at 0 HP?</div>
+
+                <div class="flow-outcome-row">
+                    <div class="flow-outcome flow-outcome-yes">
+                        <span class="flow-outcome-label">Yes — Monster fainted</span>
+                        <div class="flow-node flow-start">🎉 Victory!</div>
+                    </div>
+                    <div class="flow-outcome flow-outcome-no">
+                        <span class="flow-outcome-label">No — Continue ▼</span>
+                    </div>
+                </div>
+
+                <div class="flow-arrow">▼</div>
+                <div class="flow-node flow-system">⏱️ Wait 1 second</div>
+                <div class="flow-arrow">▼</div>
+
+                <!-- MONSTER PHASE -->
+                <div class="flow-phase flow-phase-monster">
+                    <div class="flow-phase-label">👾 Monster's Turn</div>
+
+                    <div class="flow-node flow-monster">🤖 Enemy AI picks attack</div>
+                    <div class="flow-arrow">▼</div>
+                    <div class="flow-node flow-monster">Play monster attack animation</div>
+                    <div class="flow-arrow">▼</div>
+                    <div class="flow-node flow-hero">🧑 Hero takes 8–18 damage</div>
+                    <div class="flow-arrow">▼</div>
+                    <div class="flow-node flow-decision">🛡️ Was hero defending?</div>
+
+                    <div class="flow-defend-row">
+                        <div class="flow-defend-option">
+                            <strong>Yes</strong> → damage ÷ 2
+                        </div>
+                        <div class="flow-defend-option">
+                            <strong>No</strong> → full damage
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow flow-merge">▼ Merge</div>
+
+                <!-- CHECK 2 -->
+                <div class="flow-node flow-system">📊 Update health bars</div>
+                <div class="flow-arrow">▼</div>
+                <div class="flow-node flow-decision">💀 Anyone at 0 HP?</div>
+
+                <div class="flow-outcome-row">
+                    <div class="flow-outcome flow-outcome-yes">
+                        <span class="flow-outcome-label">Yes — Hero fell</span>
+                        <div class="flow-node flow-start">😢 Defeat...</div>
+                    </div>
+                    <div class="flow-outcome flow-outcome-no">
+                        <span class="flow-outcome-label">No — Next round</span>
+                    </div>
+                </div>
+
+                <!-- LOOP INDICATOR -->
+                <div class="flow-loop-back">
+                    🔄 Loop back to <strong>Hero's Turn</strong>
+                </div>
+
+            </div>
+
+            <div class="info-box info">
+                <strong>📖 How to read this diagram:</strong>
+                <ul>
+                    <li><strong>Colored cards</strong> show who is acting — <span style="color:#4caf50">green =
+                            Hero</span>, <span style="color:#e74c3c">red = Monster</span></li>
+                    <li><strong>Yellow cards</strong> = Decision points — the code checks a condition here</li>
+                    <li><strong>Purple cards</strong> = System actions (updating the UI, waiting)</li>
+                    <li><strong>Arrows (▼)</strong> = Follow them top-to-bottom to trace the logic!</li>
+                </ul>
+            </div>
+
+            <div class="info-box tip">
+                <strong>💡 Key Insight for Students:</strong> Notice the <strong>loop</strong> — after the
+                monster's turn, the flow goes back up to <code>Hero's Turn</code>. This repeating cycle is why
+                we call it "The Battle <em>Loop</em>." Every game loop follows a similar pattern:
+                <strong>Input → Process → Check → Repeat</strong>.
+            </div>
+        </section>
+
         <!-- SCRIPTING LOGIC -->
         <section id="scripting">
-            <h2><span class="step-badge">6</span> The Battle Script</h2>
+            <h2><span class="step-badge">7</span> The Battle Script</h2>
             <p>Now for the main event — the GDScript that powers our battle! Attach a new script to
                 <code>BattleScene</code>. Let's build it piece by piece.
             </p>
@@ -663,7 +799,7 @@
 
         <!-- DEFEND ACTION -->
         <section id="defend">
-            <h2><span class="step-badge">7</span> Bonus: Defend Action</h2>
+            <h2><span class="step-badge">8</span> Bonus: Defend Action</h2>
             <p>The Defend button adds tactical depth. When the hero defends, incoming damage is <strong>halved</strong>
                 on the next monster turn.</p>
             <div class="code-container">
@@ -691,7 +827,7 @@
 
         <!-- VICTORY & DEFEAT -->
         <section id="win-lose">
-            <h2><span class="step-badge">8</span> Victory &amp; Defeat</h2>
+            <h2><span class="step-badge">9</span> Victory &amp; Defeat</h2>
             <p>Every battle needs an ending! Let's detect when either the hero or monster runs out of HP:</p>
             <div class="code-container">
                 <div class="code-header">
@@ -723,7 +859,7 @@
 
         <!-- CHALLENGES -->
         <section id="challenges">
-            <h2><span class="step-badge">9</span> Challenge Exercises</h2>
+            <h2><span class="step-badge">10</span> Challenge Exercises</h2>
             <p>Ready to level up? Try these extensions on your own:</p>
 
             <div class="challenge-grid">
@@ -1200,7 +1336,7 @@
             themeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
             localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
         });
-        if (localStorage.getItem('darkMode') === 'true') {
+        if (localStorage.getItem('darkMode') !== 'false') {
             document.body.classList.add('dark-mode');
             themeToggle.textContent = '☀️';
         }
