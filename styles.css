@@ -146,6 +146,41 @@ header h1 {
     color: rgba(255, 255, 255, 0.85);
 }
 
+/* ── Header & Footer Logos ── */
+.header-logos {
+    display: flex;
+    justify-content: center;
+    gap: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.header-logo {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 4px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+}
+
+.footer-logos {
+    display: flex;
+    justify-content: center;
+    gap: 0.8rem;
+    margin-bottom: 0.8rem;
+}
+
+.footer-logo {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    border-radius: 50%;
+    background: var(--surface);
+    padding: 3px;
+    border: 1px solid var(--border);
+}
+
 /* ── Theme Toggle ── */
 .theme-toggle {
     position: fixed;
