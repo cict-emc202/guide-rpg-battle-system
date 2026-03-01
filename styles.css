@@ -99,6 +99,17 @@ header::before {
     inset: 0;
     background: radial-gradient(circle at 30% 50%, rgba(71, 140, 191, 0.15) 0%, transparent 60%),
         radial-gradient(circle at 70% 50%, rgba(255, 202, 40, 0.08) 0%, transparent 50%);
+    z-index: 0;
+}
+
+header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('rpg-battle-system/backgrounds/23.png') center/cover;
+    opacity: 0.15;
+    mix-blend-mode: overlay;
+    z-index: 0;
 }
 
 .header-content {
@@ -1536,4 +1547,8 @@ body.dark-mode .flow-outcome-no {
     border-radius: var(--radius);
     box-shadow: var(--shadow);
     border: 1px solid var(--border);
+}
+
+.text-muted {
+    color: var(--text-muted);
 }
