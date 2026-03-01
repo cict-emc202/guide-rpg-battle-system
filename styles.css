@@ -1478,6 +1478,7 @@ body.dark-mode .flow-outcome-no {
     font-weight: 600;
     text-align: center;
     animation: loopPulse 2s ease-in-out infinite;
+    margin-bottom: 1rem;
 }
 
 @keyframes loopPulse {
@@ -1522,4 +1523,17 @@ body.dark-mode .flow-outcome-no {
     :root {
         --content-max-width: 1300px;
     }
+}
+
+.video-wrapper {
+    text-align: center;
+    margin: 1.5rem 0;
+}
+
+.video {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
 }
