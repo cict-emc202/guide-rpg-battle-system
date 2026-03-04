@@ -1113,6 +1113,71 @@ ul li {
     margin-bottom: 0.3rem;
 }
 
+/* ── Caleb Tip ── */
+.caleb-tip {
+    display: flex;
+    gap: 1.2rem;
+    background: #f4f6fe;
+    border: 1px solid #e1e7f5;
+    border-radius: var(--radius-sm);
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    align-items: flex-start;
+}
+
+body.dark-mode .caleb-tip {
+    background: rgba(71, 140, 191, 0.08);
+    border-color: rgba(71, 140, 191, 0.2);
+}
+
+.caleb-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: contain;
+    background: #e2e8f0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    flex-shrink: 0;
+}
+
+body.dark-mode .caleb-avatar {
+    background: var(--surface-alt);
+}
+
+.caleb-content {
+    flex: 1;
+}
+
+.caleb-name {
+    margin: 0 0 0.2rem 0 !important;
+    font-weight: 700;
+    color: #27347a;
+    font-size: 1rem;
+}
+
+body.dark-mode .caleb-name {
+    color: #bac4f5;
+}
+
+.caleb-text {
+    margin: 0 !important;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #4b5563;
+}
+
+body.dark-mode .caleb-text {
+    color: var(--text-muted);
+}
+
+.caleb-text strong {
+    color: #27347a;
+}
+
+body.dark-mode .caleb-text strong {
+    color: #bac4f5;
+}
+
 /* ═══════════════════════════════════════════════════
    Responsive
    ═══════════════════════════════════════════════════ */

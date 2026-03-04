@@ -27,6 +27,7 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="favicon.png">
 </head>
 
 <body>
@@ -148,6 +149,17 @@
                 </div>
             </div>
 
+            <div class="caleb-tip">
+                <img src="favicon.png" alt="Caleb" class="caleb-avatar">
+                <div class="caleb-content">
+                    <p class="caleb-name">Caleb</p>
+                    <p class="caleb-text"><strong>Rawr!</strong> Keeping your assets organized is super important!
+                        Always sort your sprites, sounds, and scripts into their own separate folders right from the
+                        start. A messy <code>res://</code> folder leads to lost files and endless confusion later on!
+                    </p>
+                </div>
+            </div>
+
             <div class="video-wrapper">
                 <video src="/v1.mp4" class="video" controls></video>
                 <p class="caption">Setting and importing assets.</p>
@@ -219,6 +231,18 @@
                 <strong>⚠️ Important:</strong> Node names must match <em>exactly</em> what you use in your script's
                 <code>@onready</code> references. If you name a node <code>HealthBar</code> in the editor but reference
                 <code>$Hero/HpBar</code> in code, it won't work!
+            </div>
+
+            <div class="caleb-tip">
+                <img src="favicon.png" alt="Caleb" class="caleb-avatar">
+                <div class="caleb-content">
+                    <p class="caleb-name">Caleb</p>
+                    <p class="caleb-text"><strong>Rawr!</strong> To avoid node reference errors, try dragging and
+                        dropping the node from the scene tree directly into your script while holding
+                        <strong>Ctrl</strong> (or <strong>Cmd</strong> on Mac). Godot will automatically write the
+                        <code>@onready</code> variable for you!
+                    </p>
+                </div>
             </div>
         </section>
 
@@ -340,6 +364,18 @@
                     <code>🛡️ Defend</code>.
                 </li>
             </ol>
+
+            <div class="caleb-tip">
+                <img src="favicon.png" alt="Caleb" class="caleb-avatar">
+                <div class="caleb-content">
+                    <p class="caleb-name">Caleb</p>
+                    <p class="caleb-text"><strong>Rawr!</strong> When building UI, remember to use the
+                        <strong>Anchors</strong> tool in the 2D editor viewport! Anchors tell Godot how your UI elements
+                        should stick to the edges when the game window is resized. Without them, your buttons might
+                        float away!
+                    </p>
+                </div>
+            </div>
         </section>
 
         <!-- ANIMATED SPRITES -->
@@ -438,6 +474,17 @@
                 <strong>💡 Tip:</strong> The <code>animation_finished</code> signal is emitted when a non-looping
                 animation reaches its last frame. We <code>await</code> it so the code pauses until the animation is
                 done, then we switch back to idle.
+            </div>
+
+            <div class="caleb-tip">
+                <img src="favicon.png" alt="Caleb" class="caleb-avatar">
+                <div class="caleb-content">
+                    <p class="caleb-name">Caleb</p>
+                    <p class="caleb-text"><strong>Rawr!</strong> Remember that <strong>AnimatedSprite2D</strong> will
+                        only emit the <code>animation_finished</code> signal if the animation is <em>not</em> set to
+                        loop. If your game gets stuck waiting on an animation, double check your loop toggle in the
+                        SpriteFrames editor!</p>
+                </div>
             </div>
 
             <h3>4.5 — Set Up the Monster</h3>
@@ -544,6 +591,17 @@
                 <strong>⚠️ Common Error (both methods):</strong> If you see <em>"Cannot connect signal: method not
                     found"</em>, double-check that the function name in your script matches exactly — including
                 underscores and capitalization.
+            </div>
+
+            <div class="caleb-tip">
+                <img src="favicon.png" alt="Caleb" class="caleb-avatar">
+                <div class="caleb-content">
+                    <p class="caleb-name">Caleb</p>
+                    <p class="caleb-text"><strong>Rawr!</strong> Be very careful when renaming or deleting nodes after
+                        you've connected signals to them! If you change a node's name in the scene tree, Godot might
+                        lose track of it, and your signal connection will break. Keep an eye on the little green link
+                        icon next to your script functions!</p>
+                </div>
             </div>
         </section>
 
@@ -680,6 +738,18 @@
                 we call it "The Battle <em>Loop</em>." Every game loop follows a similar pattern:
                 <strong>Input → Process → Check → Repeat</strong>.
             </div>
+
+            <div class="caleb-tip">
+                <img src="favicon.png" alt="Caleb" class="caleb-avatar">
+                <div class="caleb-content">
+                    <p class="caleb-name">Caleb</p>
+                    <p class="caleb-text"><strong>Rawr!</strong> Stuck on a bug where the turns don't swap correctly?
+                        Use <code>print()</code> statements in your code! Printing variables like
+                        <code>print(is_hero_turn)</code> to the Output console is an awesome way to track the flow of
+                        execution and squash nasty bugs.
+                    </p>
+                </div>
+            </div>
         </section>
 
         <!-- SCRIPTING LOGIC -->
@@ -773,6 +843,18 @@
     is_hero_turn = <span class="num">false</span>
     <span class="kw">await</span> get_tree().create_timer(<span class="num">1.0</span>).timeout
     monster_turn()</code></pre>
+            </div>
+
+            <div class="caleb-tip">
+                <img src="favicon.png" alt="Caleb" class="caleb-avatar">
+                <div class="caleb-content">
+                    <p class="caleb-name">Caleb</p>
+                    <p class="caleb-text"><strong>Rawr!</strong> Did you spot the
+                        <code>max(0, monster_hp - damage)</code> line? This ensures the monster's HP never drops below 0
+                        into negative numbers. Negative HP can cause weird logic bugs, and can mess up your
+                        TextureProgressBar fills!
+                    </p>
+                </div>
             </div>
 
             <h3>7.4 — Heal Action</h3>
@@ -895,6 +977,16 @@
         <section id="challenges">
             <h2><span class="step-badge">10</span> Challenge Exercises</h2>
             <p>Ready to level up? Try these extensions on your own:</p>
+
+            <div class="caleb-tip">
+                <img src="favicon.png" alt="Caleb" class="caleb-avatar">
+                <div class="caleb-content">
+                    <p class="caleb-name">Caleb</p>
+                    <p class="caleb-text"><strong>Rawr!</strong> Don't be afraid to break things! The best way to learn
+                        Godot is by experimenting. Before trying these challenges, go to the top menu and select
+                        <strong>Project &gt; Duplicate</strong> to make a safe backup of your working battle system.</p>
+                </div>
+            </div>
 
             <div class="challenge-grid">
                 <div class="challenge-card easy">
